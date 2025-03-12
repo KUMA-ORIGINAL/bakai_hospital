@@ -1,0 +1,27 @@
+[
+    {
+        "model": "organizations.organization",
+        "pk": 1,
+        "fields": {
+            "name": "Национальный Госпиталь",
+            "address": "ул. Медицинская, 123, Бишкек",
+            "phone_number": "+996 312 123 456",
+            "email": "info@nathospital.kg",
+            "logo": "",
+            "website": "https://nathospital.kg"
+        }
+    },
+    {
+        "model": "organizations.organization",
+        "pk": 2,
+        "fields": {
+            "name": "Клиника №1",
+            "address": "ул. Советская, 45, Бишкек",
+            "phone_number": "+996 312 789 012",
+            "email": "clinic1@nathospital.kg",
+            "logo": "",
+            "website": "https://clinic1.kg"
+        }
+    }
+]
+

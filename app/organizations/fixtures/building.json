@@ -1,0 +1,20 @@
+[
+    {
+        "model": "organizations.building",
+        "pk": 1,
+        "fields": {
+            "name": "Главное здание",
+            "address": "ул. Медицинская, 123",
+            "organization": 1
+        }
+    },
+    {
+        "model": "organizations.building",
+        "pk": 2,
+        "fields": {
+            "name": "Хирургический корпус",
+            "address": "ул. Медицинская, 125",
+            "organization": 1
+        }
+    }
+]

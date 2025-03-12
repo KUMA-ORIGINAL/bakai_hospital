@@ -1,0 +1,29 @@
+[
+    {
+        "model": "organizations.department",
+        "pk": 1,
+        "fields": {
+            "name": "Кардиологическое отделение",
+            "logo": "",
+            "building": 1
+        }
+    },
+    {
+        "model": "organizations.department",
+        "pk": 2,
+        "fields": {
+            "name": "Хирургическое отделение",
+            "logo": "",
+            "building": 1
+        }
+    },
+    {
+        "model": "organizations.department",
+        "pk": 3,
+        "fields": {
+            "name": "Терапевтическое отделение",
+            "logo": "",
+            "building": 2
+        }
+    }
+]

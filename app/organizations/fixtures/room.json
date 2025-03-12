@@ -1,0 +1,32 @@
+[
+    {
+        "model": "organizations.room",
+        "pk": 1,
+        "fields": {
+            "room_number": "101",
+            "floor": 1,
+            "department": 1,
+            "building": 1
+        }
+    },
+    {
+        "model": "organizations.room",
+        "pk": 2,
+        "fields": {
+            "room_number": "102",
+            "floor": 1,
+            "department": 2,
+            "building": 1
+        }
+    },
+    {
+        "model": "organizations.room",
+        "pk": 3,
+        "fields": {
+            "room_number": "201",
+            "floor": 2,
+            "department": 3,
+            "building": 2
+        }
+    }
+]
