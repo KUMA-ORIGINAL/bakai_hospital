@@ -64,7 +64,7 @@ INSTALLED_APPS = [
     'services',
     'organizations',
     'transactions',
-    'logs',
+    'logs_app',
     'common',
 ]
 
@@ -370,7 +370,7 @@ UNFOLD = {
                     {
                         "title": _("Логи"),
                         "icon": "history",
-                        "link": reverse_lazy("admin:logs_log_changelist"),
+                        "link": reverse_lazy("admin:logs_app_log_changelist"),
                         'permission': 'account.admin_permissions.permission_callback_for_doctor_and_accountant',
                     },
                 ],
