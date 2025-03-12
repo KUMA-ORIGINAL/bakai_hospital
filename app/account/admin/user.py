@@ -75,8 +75,8 @@ class UserAdmin(UserAdmin, UnfoldModelAdmin):
             ),
             ("Dates", {"fields": ("last_login", "date_joined")}),
             ('Personal info', {'fields': (
-                'first_name', 'last_name', 'patronymic', 'birthdate', 'phone_number', 'telegram_id', 'comment',
-                'photo')}),
+                'first_name', 'last_name', 'patronymic', 'birthdate', 'phone_number',
+                'position', 'specialization', 'telegram_id', 'comment', 'photo')}),
             ('Organization', {'fields': ('organization', 'room')}),
         )
         if request.user.is_superuser:
