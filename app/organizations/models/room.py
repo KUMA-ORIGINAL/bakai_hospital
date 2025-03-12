@@ -5,6 +5,13 @@ class Room(models.Model):
     room_number = models.CharField(max_length=20, verbose_name="Номер кабинета")
     floor = models.IntegerField(verbose_name="Этаж")
     building = models.ForeignKey('Building', on_delete=models.CASCADE, verbose_name="Здание")
+    department = models.ForeignKey(
+        'Department',
+        on_delete=models.CASCADE,
+        blank=True,
+        null=True,
+        verbose_name="Отдел"
+    )
     services = models.ManyToManyField(
         'services.Service',
         blank=True,

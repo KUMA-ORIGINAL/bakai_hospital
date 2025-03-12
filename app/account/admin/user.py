@@ -5,7 +5,7 @@ from django.contrib.auth.models import Group
 from unfold.admin import ModelAdmin as UnfoldModelAdmin
 from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationForm
 
-from organizations.models import Room, Department
+from organizations.models import Room
 from ..models import User, ROLE_ADMIN
 
 admin.site.unregister(Group)
@@ -77,14 +77,14 @@ class UserAdmin(UserAdmin, UnfoldModelAdmin):
             ('Personal info', {'fields': (
                 'first_name', 'last_name', 'patronymic', 'birthdate', 'phone_number', 'telegram_id', 'comment',
                 'photo')}),
-            ('Organization', {'fields': ('organization', 'room', 'department')}),
+            ('Organization', {'fields': ('organization', 'room')}),
         )
         if request.user.is_superuser:
             pass
 
         elif request.user.role == ROLE_ADMIN:
             fieldsets = [fs for fs in fieldsets if fs[0] != "Permissions"]
-            fieldsets[3][1]['fields'] = ('room', 'department')
+            fieldsets[3][1]['fields'] = ('room',)
         return fieldsets
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
@@ -92,8 +92,6 @@ class UserAdmin(UserAdmin, UnfoldModelAdmin):
             organization = request.user.organization
             if db_field.name == "room":
                 kwargs["queryset"] = Room.objects.filter(building__organization=organization)
-            elif db_field.name == "department":
-                kwargs["queryset"] = Department.objects.filter(organization=organization)
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
     def save_model(self, request, obj, form, change):

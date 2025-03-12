@@ -18,10 +18,11 @@ class RoomAdmin(BaseModelAdmin):
             organization = request.user.organization
             if db_field.name == "building":
                 kwargs["queryset"] = Building.objects.filter(organization=organization)
+
         return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
     def get_list_display(self, request):
-        list_display = ("id", "room_number", "floor", "building", 'detail_link')
+        list_display = ("id", "room_number", "floor", "building", 'department', 'detail_link')
         if request.user.is_superuser:
             pass
         elif request.user.role == ROLE_ADMIN:

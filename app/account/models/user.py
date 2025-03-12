@@ -122,7 +122,6 @@ class User(AbstractUser):
     role = models.CharField(
         max_length=20,
         choices=ROLE_CHOICES,
-        default=ROLE_DOCTOR,
         blank=True,
         verbose_name='Роль'
     )
@@ -140,13 +139,6 @@ class User(AbstractUser):
         null=True,
         blank=True,
         verbose_name='Кабинет'
-    )
-    department = models.ForeignKey(
-        'organizations.Department',
-        on_delete=models.CASCADE,
-        blank=True,
-        null=True,
-        verbose_name="Отдел"
     )
 
     username = None
