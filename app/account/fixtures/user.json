@@ -17,8 +17,7 @@
       "photo": "accountant.jpg",
       "role": "accountant",
       "organization": 1,
-      "room": 1,
-      "services": []
+      "room": null
     }
   },
   {
@@ -39,8 +38,7 @@
       "photo": "superadmin.jpg",
       "role": "superadmin",
       "organization": 1,
-      "room": null,
-      "services": []
+      "room": null
     }
   },
   {
@@ -61,8 +59,7 @@
       "photo": "admin.jpg",
       "role": "admin",
       "organization": 1,
-      "room": 3,
-      "services": []
+      "room": null
     }
   },
     {
@@ -83,8 +80,7 @@
       "photo": "doctor.jpg",
       "role": "doctor",
       "organization": 1,
-      "room": 2,
-      "services": [1, 2]
+      "room": null
     }
   }
 ]
