@@ -9,4 +9,5 @@ router.register('patients', views.PatientViewSet, basename='patients')
 
 urlpatterns = [
     path('', include(router.urls)),
+    path('process-passport/', views.PassportOCRView.as_view(), name='process_passport'),
 ]

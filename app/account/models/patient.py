@@ -56,7 +56,7 @@ class Patient(models.Model):
         null=True,
         verbose_name='Фото паспорта'
     )
-    passport_id = models.CharField(
+    passport_number = models.CharField(
         max_length=50,
         verbose_name='Номер паспорта'
     )

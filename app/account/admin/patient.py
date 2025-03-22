@@ -6,7 +6,7 @@ from ..models import Patient, ROLE_ADMIN, ROLE_DOCTOR
 
 @admin.register(Patient)
 class PatientAdmin(BaseModelAdmin):
-    search_fields = ('first_name', 'last_name', 'patronymic', 'inn', 'phone_number', 'passport_id')
+    search_fields = ('first_name', 'last_name', 'patronymic', 'inn', 'phone_number', 'passport_number')
     readonly_fields = ('created_at',)
     date_hierarchy = 'created_at'
 
@@ -36,7 +36,7 @@ class PatientAdmin(BaseModelAdmin):
             (None, {
                 'fields': (
                     'first_name', 'last_name', 'patronymic', 'birthdate', 'gender', 'inn', 'phone_number',
-                    'passport_id')
+                    'passport_number')
             }),
             ('Дополнительно', {
                 'fields': ('photo', 'comment', 'passport_photo', 'organization', 'created_at'),
