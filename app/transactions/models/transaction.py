@@ -1,4 +1,5 @@
 from django.db import models
+from simple_history.models import HistoricalRecords
 
 
 class Transaction(models.Model):
@@ -18,7 +19,7 @@ class Transaction(models.Model):
         verbose_name="Статус оплаты"
     )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата транзакции")
-
+    history = HistoricalRecords()
     organization = models.ForeignKey(
         'organizations.Organization',
         on_delete=models.CASCADE,

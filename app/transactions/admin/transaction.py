@@ -1,6 +1,7 @@
 from django.contrib import admin
 
 from import_export.admin import ExportActionModelAdmin
+from simple_history.admin import SimpleHistoryAdmin
 from unfold.admin import TabularInline
 from unfold.contrib.filters.admin import RangeDateTimeFilter
 from unfold.contrib.import_export.forms import ExportForm
@@ -19,7 +20,7 @@ class TransactionServiceInline(TabularInline):
 
 
 @admin.register(Transaction)
-class TransactionAdmin(BaseModelAdmin, ExportActionModelAdmin):
+class TransactionAdmin(SimpleHistoryAdmin, BaseModelAdmin, ExportActionModelAdmin):
     search_fields = ("patient__first_name", "patient__last_name", "staff__first_name", "staff__last_name",)
     ordering = ("-created_at",)
     readonly_fields = ("created_at",)

@@ -81,6 +81,8 @@ MIDDLEWARE = [
     'django.contrib.auth.middleware.AuthenticationMiddleware',
     'django.contrib.messages.middleware.MessageMiddleware',
     'django.middleware.clickjacking.XFrameOptionsMiddleware',
+
+    "simple_history.middleware.HistoryRequestMiddleware",
 ]
 
 ROOT_URLCONF = 'config.urls'
@@ -363,18 +365,18 @@ UNFOLD = {
                     },
                 ],
             },
-            {
-                "title": _("Логи"),
-                "separator": True,
-                "items": [
-                    {
-                        "title": _("Логи"),
-                        "icon": "history",
-                        "link": reverse_lazy("admin:logs_app_log_changelist"),
-                        'permission': 'account.admin_permissions.permission_callback_for_doctor_and_accountant',
-                    },
-                ],
-            },
+            # {
+            #     "title": _("Логи"),
+            #     "separator": True,
+            #     "items": [
+            #         {
+            #             "title": _("Логи"),
+            #             "icon": "history",
+            #             "link": reverse_lazy("admin:logs_app_log_changelist"),
+            #             'permission': 'account.admin_permissions.permission_callback_for_doctor_and_accountant',
+            #         },
+            #     ],
+            # },
             {
                 "title": _("Услуги"),
                 "separator": True,

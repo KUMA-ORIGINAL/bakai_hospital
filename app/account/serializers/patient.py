@@ -7,20 +7,28 @@ class PatientSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = Patient
-        fields = [
+        fields = (
             'id',
             'first_name',
             'last_name',
             'patronymic',
             'inn',
-            # 'birthdate',
-            # 'gender',
-            # 'photo',
-            # 'comment',
-            # 'inn',
-            # 'phone_number',
-            # 'passport_photo',
-            # 'passport_id',
-            # 'created_at',
-            # 'organization',
-        ]
+        )
+
+
+class PatientCreateSerializer(serializers.ModelSerializer):
+
+    class Meta:
+        model = Patient
+        fields = (
+            'id',
+            'first_name',
+            'last_name',
+            'patronymic',
+            'inn',
+            'birthdate',
+            'gender',
+            'passport_front_photo',
+            'passport_back_photo',
+            'passport_number',
+        )

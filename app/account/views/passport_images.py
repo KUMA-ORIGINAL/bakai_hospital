@@ -22,7 +22,7 @@ class PassportOCRView(APIView):
                 "patronymic": 'Асанович',
                 "gender": 'male',
                 'birthdate': '1999-01-01',
-                'passport_id': 'ID12341232'
+                'passport_number': 'ID12341232'
             }
             return Response(response_data, status=status.HTTP_200_OK)
 

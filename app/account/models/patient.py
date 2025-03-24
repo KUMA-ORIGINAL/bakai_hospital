@@ -50,11 +50,17 @@ class Patient(models.Model):
         max_length=20,
         verbose_name='Телефонный номер'
     )
-    passport_photo = models.ImageField(
+    passport_front_photo = models.ImageField(
         upload_to='patients/passport_photos/%Y/%m/%d/',
         blank=True,
         null=True,
-        verbose_name='Фото паспорта'
+        verbose_name='Фото паспорта - передняя'
+    )
+    passport_back_photo = models.ImageField(
+        upload_to='patients/passport_photos/%Y/%m/%d/',
+        blank=True,
+        null=True,
+        verbose_name='Фото паспорта - задняя'
     )
     passport_number = models.CharField(
         max_length=50,

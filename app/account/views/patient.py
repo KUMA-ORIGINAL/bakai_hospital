@@ -3,7 +3,7 @@ from rest_framework import viewsets, mixins
 from django.db.models import Q
 
 from ..models import Patient
-from ..serializers import PatientSerializer
+from ..serializers import PatientSerializer, PatientCreateSerializer
 
 
 @extend_schema(
@@ -18,15 +18,19 @@ from ..serializers import PatientSerializer
     ]
 )
 class PatientViewSet(viewsets.GenericViewSet,
-                            mixins.ListModelMixin):
-    queryset = Patient.objects.all()
-    serializer_class = PatientSerializer
+                     mixins.ListModelMixin,
+                     mixins.CreateModelMixin,):
+
+    def get_serializer_class(self):
+        if self.action == 'list':
+            return PatientSerializer
+        return PatientCreateSerializer
 
     def get_queryset(self):
         """
         Определяет поиск по параметрам phone_number и inn.
         """
-        queryset = super().get_queryset()
+        queryset = Patient.objects.all()
         search_query = self.request.GET.get('search', None)
         if search_query:
             queryset = queryset.filter(
