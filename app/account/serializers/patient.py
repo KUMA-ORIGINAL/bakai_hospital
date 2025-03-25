@@ -26,7 +26,7 @@ class PatientCreateSerializer(serializers.ModelSerializer):
             'last_name',
             'patronymic',
             'inn',
-            'birthdate',
+            'date_of_birth',
             'gender',
             'passport_front_photo',
             'passport_back_photo',

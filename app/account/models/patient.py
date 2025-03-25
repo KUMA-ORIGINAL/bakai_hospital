@@ -22,7 +22,7 @@ class Patient(models.Model):
         null=True,
         verbose_name='Отчество'
     )
-    birthdate = models.DateField(
+    date_of_birth = models.DateField(
         verbose_name='Дата рождения'
     )
     gender = models.CharField(

@@ -39,12 +39,12 @@ class PassportOCRView(APIView):
 
             response_data = {
                 "inn": '0101010101',
-                "first_name": 'Асан',
-                "las_name": 'Асанов',
+                "firstName": 'Асан',
+                "lastName": 'Асанов',
                 "patronymic": 'Асанович',
                 "gender": 'male',
-                'birthdate': '1999-01-01',
-                'passport_number': 'ID12341232'
+                'dateOfBirth': '1999-01-01',
+                'passportNumber': 'ID12341232'
             }
             return Response(response_data, status=status.HTTP_200_OK)
 
