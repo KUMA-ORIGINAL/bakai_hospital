@@ -32,20 +32,20 @@ class PassportOCRView(APIView):
             front_image = serializer.validated_data['front_image']
             back_image = serializer.validated_data['back_image']
 
-            front_image_base64 = self.encode_image_to_base64(front_image)
-            back_image_base64 = self.encode_image_to_base64(back_image)
+            # front_image_base64 = self.encode_image_to_base64(front_image)
+            # back_image_base64 = self.encode_image_to_base64(back_image)
+            #
+            # response_data = send_to_openai(front_image_base64, back_image_base64)
 
-            response_data = send_to_openai(front_image_base64, back_image_base64)
-
-            # response_data = {
-            #     "inn": '0101010101',
-            #     "first_name": 'Асан',
-            #     "las_name": 'Асанов',
-            #     "patronymic": 'Асанович',
-            #     "gender": 'male',
-            #     'birthdate': '1999-01-01',
-            #     'passport_number': 'ID12341232'
-            # }
+            response_data = {
+                "inn": '0101010101',
+                "first_name": 'Асан',
+                "las_name": 'Асанов',
+                "patronymic": 'Асанович',
+                "gender": 'male',
+                'birthdate': '1999-01-01',
+                'passport_number': 'ID12341232'
+            }
             return Response(response_data, status=status.HTTP_200_OK)
 
         return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
