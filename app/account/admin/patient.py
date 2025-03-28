@@ -20,14 +20,14 @@ class PatientAdmin(BaseModelAdmin):
 
     def get_list_display(self, request):
         list_display = (
-            'first_name', 'last_name', 'patronymic', 'birthdate', 'gender', 'inn', 'phone_number',
+            'first_name', 'last_name', 'patronymic', 'date_of_birth', 'gender', 'inn', 'phone_number',
             'organization', 'detail_link'
         )
         if request.user.is_superuser:
             pass
         elif request.user.role in (ROLE_ADMIN, ROLE_DOCTOR):
             list_display = (
-                'first_name', 'last_name', 'patronymic', 'birthdate', 'gender', 'inn', 'phone_number', 'detail_link'
+                'first_name', 'last_name', 'patronymic', 'date_of_birth', 'gender', 'inn', 'phone_number', 'detail_link'
             )
         return list_display
 
@@ -35,7 +35,7 @@ class PatientAdmin(BaseModelAdmin):
         fieldsets = (
             (None, {
                 'fields': (
-                    'first_name', 'last_name', 'patronymic', 'birthdate', 'gender', 'inn', 'phone_number',
+                    'first_name', 'last_name', 'patronymic', 'date_of_birth', 'gender', 'inn', 'phone_number',
                     'passport_number')
             }),
             ('Дополнительно', {
