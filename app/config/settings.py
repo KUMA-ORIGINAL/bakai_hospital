@@ -155,6 +155,8 @@ DEFAULT_AUTO_FIELD = 'django.db.models.BigAutoField'
 
 OPENAI_API_KEY=env('OPENAI_API_KEY')
 
+PAYMENT_API_TOKEN = env('PAYMENT_API_TOKEN')
+
 LANGUAGES = (
     ('ru', 'Russian'),
     ('en', 'English'),

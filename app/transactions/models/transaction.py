@@ -5,7 +5,7 @@ from simple_history.models import HistoricalRecords
 class Transaction(models.Model):
     patient = models.ForeignKey('account.Patient', on_delete=models.CASCADE, verbose_name="Пациент")
     staff = models.ForeignKey('account.User', on_delete=models.CASCADE, verbose_name="Сотрудник")
-    total_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Общая сумма")
+    total_price = models.DecimalField(max_digits=10, decimal_places=2, verbose_name="Общая сумма", blank=True, null=True)
     comment = models.TextField(blank=True, null=True, verbose_name="Комментарий")
     phone_number = models.CharField(max_length=20, verbose_name="Номер телефона")
     pay_method = models.CharField(

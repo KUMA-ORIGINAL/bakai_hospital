@@ -1,26 +1,27 @@
 import json
 import re
-
 import openai
 from django.conf import settings
 
 
 def send_to_openai(front_image_base64, back_image_base64):
-    """ Отправляет изображения паспорта в OpenAI и получает JSON-ответ """
+    """ Отправляет изображения паспорта в OpenAI и получает JSON-ответ на русском языке """
     try:
         client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
 
         messages = [
             {"role": "system",
-             "content": "Ты опытный OCR-специалист. Проанализируй изображения паспорта и верни чистый JSON без форматирования."},
+             "content": "Ты OCR-специалист. Проанализируй текст на изображениях паспорта и верни только JSON."},
             {"role": "user", "content": [
                 {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{front_image_base64}"}},
                 {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{back_image_base64}"}},
                 {"type": "text",
-                 "text": 'Распознай паспорт и верни **чистый JSON, без форматирования, без пояснений**, строго: '
-                         '{"inn": "", "first_name": "", "last_name": "", "patronymic": "", '
-                         '"gender": "", "birthdate": "", "passport_number": ""}. '
-                         '❗ Не добавляй ничего перед и после JSON. Просто JSON.'}
+                 "text": (
+                     'Распознай паспорт, только кириллицу и числа. Верни **чистый JSON**, строго в таком формате: '
+                     '{"inn": "", "first_name": "", "last_name": "", "patronymic": "", '
+                     '"gender": "", "date_of_birth": "", "passport_number": ""}. '
+                     'Не добавляй никакой другой текст, кроме JSON!'
+                 )}
             ]}
         ]
 
@@ -31,11 +32,25 @@ def send_to_openai(front_image_base64, back_image_base64):
 
         result_text = response.choices[0].message.content.strip()
 
+        # Удаляем возможные текстовые обёртки вокруг JSON
         result_text = re.sub(r"^```json\n|\n```$", "", result_text).strip()
 
-        # Проверяем, начинается ли ответ с "{" и заканчивается "}"
+        # Проверяем, является ли ответ валидным JSON
         if result_text.startswith("{") and result_text.endswith("}"):
-            return json.loads(result_text)  # Парсим в словарь Python
+            extracted_data = json.loads(result_text)
+
+            extracted_data["first_name"] = extracted_data["first_name"].capitalize()
+            extracted_data["last_name"] = extracted_data["last_name"].capitalize()
+            extracted_data["patronymic"] = extracted_data["patronymic"].capitalize()
+
+            if extracted_data.get("gender") in ["М", "Э"]:
+                extracted_data["gender"] = "male"
+            elif extracted_data.get("gender") in ["Ж", "А"]:
+                extracted_data["gender"] = "female"
+            else:
+                extracted_data["gender"] = ""
+
+            return extracted_data
 
         return {"error": "OpenAI не вернул JSON. Ответ: " + result_text}
 
