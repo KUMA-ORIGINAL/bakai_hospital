@@ -17,7 +17,7 @@ def generate_payment_link(transaction):
         "amount": str(transaction.total_price),  # Итоговая сумма заказа
         "transactionID": str(transaction.id),  # ID заказа
         "comment": f"Оплата заказа #{transaction.id}",  # Комментарий
-        "redirectURL": f"https://{DOMAIN}/payment/webhook/"  # URL после успешной оплаты
+        "redirectURL": f"https://{DOMAIN}/api/payment/webhook/"  # URL после успешной оплаты
     }
 
     headers = {
