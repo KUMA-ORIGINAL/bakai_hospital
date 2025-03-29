@@ -1,4 +1,5 @@
 import requests
+import json
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from django.utils.decorators import method_decorator
@@ -33,6 +34,9 @@ class PaymentWebhookViewSet(viewsets.ViewSet):
             }
 
             response = requests.post(url, headers=headers, json=payload)
+
+            logger.warning("Код ответа:", response.status_code)
+            logger.warning("Ответ сервера:", response.text)
 
             # if not transaction_id or not payment_status:
             #     logger.warning("Недостаточно данных в webhook: %s", data)
