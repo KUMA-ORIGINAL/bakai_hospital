@@ -20,6 +20,7 @@ def generate_payment_link(transaction):
 
     headers = {
         "Content-Type": "application/json",
+        'accept': '*/*',
         'Authorization': f"Bearer {PAYMENT_API_TOKEN}"
     }
 
