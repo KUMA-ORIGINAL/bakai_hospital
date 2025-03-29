@@ -1,7 +1,15 @@
 import json
 import re
+from datetime import datetime
+
 import openai
 from django.conf import settings
+
+def normalize_date(date_string):
+    try:
+        return datetime.strptime(date_string, "%d.%m.%Y").strftime("%Y-%m-%d")
+    except (ValueError, TypeError):
+        return date_string
 
 
 def send_to_openai(front_image_base64, back_image_base64):
@@ -49,6 +57,8 @@ def send_to_openai(front_image_base64, back_image_base64):
                 extracted_data["gender"] = "female"
             else:
                 extracted_data["gender"] = ""
+
+            extracted_data["date_of_birth"] = normalize_date(extracted_data.get("date_of_birth", ""))
 
             return extracted_data
 
