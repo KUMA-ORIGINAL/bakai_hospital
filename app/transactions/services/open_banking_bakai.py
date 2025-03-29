@@ -4,6 +4,8 @@ import logging
 
 from django.conf import settings
 
+from config.settings import DOMAIN
+
 PAYMENT_API_URL = "https://openbanking-api.bakai.kg/api/PayLink/CreatePayLink"
 PAYMENT_API_TOKEN = settings.PAYMENT_API_TOKEN
 
@@ -15,7 +17,7 @@ def generate_payment_link(transaction):
         "amount": str(transaction.total_price),  # Итоговая сумма заказа
         "transactionID": str(transaction.id),  # ID заказа
         "comment": f"Оплата заказа #{transaction.id}",  # Комментарий
-        "redirectURL": f"https://yourwebsite.com/payment_success/{transaction.id}"  # URL после успешной оплаты
+        "redirectURL": f"https://{DOMAIN}/api/payment/webhook/"  # URL после успешной оплаты
     }
 
     headers = {
