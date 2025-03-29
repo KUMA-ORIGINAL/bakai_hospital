@@ -6,7 +6,7 @@ class TransactionService(models.Model):
     quantity = models.PositiveIntegerField(verbose_name="Количество", default=1)  # Новое поле для количества
 
     transaction = models.ForeignKey('Transaction', on_delete=models.CASCADE, verbose_name="Транзакция", related_name='services')
-    service = models.ForeignKey('services.Service', on_delete=models.CASCADE, verbose_name="Услуга")
+    service = models.ForeignKey('services.Service', on_delete=models.PROTECT, verbose_name="Услуга")
 
     def __str__(self):
         return f"Услуга {self.service.name} для транзакции {self.transaction.id}"
