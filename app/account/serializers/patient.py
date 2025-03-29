@@ -1,5 +1,6 @@
 from rest_framework import serializers
 
+from organizations.models import Organization
 from ..models import Patient
 
 
@@ -32,3 +33,9 @@ class PatientCreateSerializer(serializers.ModelSerializer):
             'passport_back_photo',
             'passport_number',
         )
+
+    def create(self, validated_data):
+        organization = Organization.objects.filter(name='Национальный Госпиталь').first()
+        validated_data['organization_id'] = organization.pk
+
+        return super().create(validated_data)
