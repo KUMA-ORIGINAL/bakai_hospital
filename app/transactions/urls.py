@@ -5,6 +5,7 @@ from . import views
 
 router = DefaultRouter()
 router.register('transactions', views.TransactionViewSet, basename='transactions')
+router.register('payment/webhook', views.PaymentWebhookViewSet, basename='payment_webhook')
 
 
 urlpatterns = [
