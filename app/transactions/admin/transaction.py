@@ -15,7 +15,7 @@ from ..resources import TransactionResource
 class TransactionServiceInline(TabularInline):
     model = TransactionService
     extra = 1
-    fields = ("service", "service_price")
+    fields = ("service", "service_price", 'quantity')
     readonly_fields = ("service_price",)
 
 
