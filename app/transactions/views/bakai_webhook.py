@@ -23,7 +23,7 @@ class PaymentWebhookViewSet(viewsets.ViewSet):
             transaction_id = data.get('operation_id')
             payment_status = data.get('operation_state')
 
-            url = "https://emirtest.app.n8n.cloud/webhook-test/md_payment"
+            url = "https://emirtest.app.n8n.cloud/webhook/md_payment"
             payload = {
                 "operationID": "12345",
                 "operationState": "success"
