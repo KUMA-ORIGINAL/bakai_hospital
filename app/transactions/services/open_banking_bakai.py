@@ -6,7 +6,7 @@ from django.conf import settings
 
 from config.settings import DOMAIN
 
-PAYMENT_API_URL = "http://193.176.239.186/api/v1/payments/make-payment-link/"
+PAYMENT_API_URL = "https://pay.operator.kg/api/v1/payments/make-payment-link/"
 PAYMENT_API_TOKEN = settings.PAYMENT_API_TOKEN
 
 logger = logging.getLogger(__name__)
