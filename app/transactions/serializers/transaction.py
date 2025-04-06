@@ -29,10 +29,11 @@ class TransactionCreateSerializer(serializers.ModelSerializer):
 
         service_instances = [item['service'] for item in services_data]
         total_price = sum(service.price for service in service_instances)
-        validated_data['total_price'] = total_price
+        validated_data['total_price'] = 1
 
         organization = Organization.objects.filter(name='Национальный Госпиталь').first()
         validated_data['organization_id'] = organization.pk
+        validated_data['status'] = 'paid'
 
         transaction = Transaction.objects.create(**validated_data)
         for service_data in services_data:

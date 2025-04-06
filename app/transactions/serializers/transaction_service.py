@@ -8,4 +8,4 @@ class TransactionServiceSerializer(serializers.ModelSerializer):
 
     class Meta:
         model = TransactionService
-        fields = ['id', 'service', 'service_name', 'service_price']
+        fields = ['id', 'service', 'service_name', 'service_price', 'quantity']

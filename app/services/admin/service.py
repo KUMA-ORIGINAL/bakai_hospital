@@ -10,6 +10,7 @@ from common.admin import BaseModelAdmin
 class ServiceAdmin(BaseModelAdmin, TabbedTranslationAdmin):
     search_fields = ("name", "organization__name")
     ordering = ("name",)
+    list_per_page = 50
 
     def get_list_filter(self, request):
         list_filter = ("organization",)

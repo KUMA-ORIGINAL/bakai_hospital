@@ -15,7 +15,7 @@ class Transaction(models.Model):
     )
     status = models.CharField(
         max_length=50,
-        choices=[('paid', 'Оплачено'), ('pending', 'В ожидании'), ('failed', 'Не удалось')],
+        choices=[('success', 'Оплачено'), ('pending', 'В ожидании'), ('failed', 'Не удалось')],
         verbose_name="Статус оплаты"
     )
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата транзакции")
