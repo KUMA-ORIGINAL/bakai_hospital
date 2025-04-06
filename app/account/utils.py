@@ -32,7 +32,7 @@ def send_to_openai(front_image_base64, back_image_base64):
                      'Распознай паспорт, только кириллицу и числа. Верни **чистый JSON**, строго в таком формате: '
                      '{"inn": "", "first_name": "", "last_name": "", "patronymic": "", '
                      '"gender": "", "date_of_birth": "", "passport_number": ""}. '
-                     'Не добавляй никакой другой текст, кроме JSON!'
+                     'Формат дат возвращай в виде - YYYY-MM-DD. Не добавляй никакой другой текст, кроме JSON!'
                  )}
             ]}
         ]
@@ -64,7 +64,7 @@ def send_to_openai(front_image_base64, back_image_base64):
             else:
                 extracted_data["gender"] = ""
 
-            extracted_data["date_of_birth"] = normalize_date(extracted_data.get("date_of_birth", ""))
+            # extracted_data["date_of_birth"] = normalize_date(extracted_data.get("date_of_birth", ""))
 
             return extracted_data
 
