@@ -33,7 +33,6 @@ class TransactionCreateSerializer(serializers.ModelSerializer):
 
         organization = Organization.objects.filter(name='Национальный Госпиталь').first()
         validated_data['organization_id'] = organization.pk
-        validated_data['status'] = 'paid'
 
         transaction = Transaction.objects.create(**validated_data)
         for service_data in services_data:
