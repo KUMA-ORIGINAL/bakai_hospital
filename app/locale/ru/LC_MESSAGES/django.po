@@ -95,7 +95,6 @@ msgstr ""
 msgid "Группы"
 msgstr ""
 
-
 msgid "No results found"
 msgstr "Ничего не найдено"
 
@@ -104,3 +103,24 @@ msgstr "На этой странице нет результатов. Созда
 
 msgid "Reset filters"
 msgstr "Сбросить фильтры"
+
+msgid "Dark"
+msgstr "Тёмная"
+
+msgid "Light"
+msgstr "Светлая"
+
+msgid "System"
+msgstr "Системная"
+
+msgid "Type to search"
+msgstr "Введите для поиска"
+
+msgid "Date from"
+msgstr "Дата с"
+
+msgid "Date to"
+msgstr "Дата по"
+
+msgid "Apply Filters"
+msgstr "Применить фильтры"
