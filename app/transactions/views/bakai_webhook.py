@@ -23,37 +23,37 @@ class PaymentWebhookViewSet(viewsets.ViewSet):
             transaction_id = data.get('operation_id')
             payment_status = data.get('operation_state')
 
-            url = "https://emirtest.app.n8n.cloud/webhook/md_payment"
-            payload = {
-                "operationID": "12345",
-                "operationState": "success"
-            }
-
-            headers = {
-                "Content-Type": "application/json"
-            }
-
-            response = requests.post(url, headers=headers, json=payload)
-
-            logger.warning("Код ответа:", response.status_code)
-            logger.warning("Ответ сервера:", response.text)
-
-            # if not transaction_id or not payment_status:
-            #     logger.warning("Недостаточно данных в webhook: %s", data)
-            #     return Response({'error': 'Недостаточно данных'}, status=status.HTTP_400_BAD_REQUEST)
+            # url = "https://emirtest.app.n8n.cloud/webhook/md_payment"
+            # payload = {
+            #     "operationID": "12345",
+            #     "operationState": "success"
+            # }
             #
-            # try:
-            #     transaction = Transaction.objects.get(id=transaction_id)
-            # except Transaction.DoesNotExist:
-            #     logger.error(f"Транзакция не найдена: ID {transaction_id}")
-            #     return Response({'error': 'Транзакция не найдена'}, status=status.HTTP_404_NOT_FOUND)
+            # headers = {
+            #     "Content-Type": "application/json"
+            # }
+
+            # response = requests.post(url, headers=headers, json=payload)
             #
-            # if transaction.status != payment_status:
-            #     logger.info(f"Обновление статуса транзакции {transaction.id}: {transaction.status} → {payment_status}")
-            #     transaction.status = payment_status
-            #     transaction.save(update_fields=["status"])
-            # else:
-            #     logger.info(f"Повторное получение webhook: статус уже установлен — {payment_status}")
+            # logger.warning("Код ответа:", response.status_code)
+            # logger.warning("Ответ сервера:", response.text)
+
+            if not transaction_id or not payment_status:
+                logger.warning("Недостаточно данных в webhook: %s", data)
+                return Response({'error': 'Недостаточно данных'}, status=status.HTTP_400_BAD_REQUEST)
+
+            try:
+                transaction = Transaction.objects.get(id=transaction_id)
+            except Transaction.DoesNotExist:
+                logger.error(f"Транзакция не найдена: ID {transaction_id}")
+                return Response({'error': 'Транзакция не найдена'}, status=status.HTTP_404_NOT_FOUND)
+
+            if transaction.status != payment_status:
+                logger.info(f"Обновление статуса транзакции {transaction.id}: {transaction.status} → {payment_status}")
+                transaction.status = payment_status
+                transaction.save(update_fields=["status"])
+            else:
+                logger.info(f"Повторное получение webhook: статус уже установлен — {payment_status}")
 
             return Response({'success': True}, status=status.HTTP_200_OK)
 
