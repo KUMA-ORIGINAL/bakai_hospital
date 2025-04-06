@@ -15,6 +15,8 @@ FROM python:3.12.8-alpine3.20
 ENV PROJECT_DIR=/app
 WORKDIR $PROJECT_DIR
 
+RUN apk update && apk add --no-cache gettext && rm -rf /var/lib/apt/lists/*
+
 COPY --from=builder /app/wheels /wheels
 COPY --from=builder /app/requirements.txt .
 

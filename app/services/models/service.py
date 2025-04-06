@@ -22,6 +22,14 @@ class Service(models.Model):
         null=True,
         verbose_name='Фото услуги'
     )
+    category = models.ForeignKey(
+        'Category',
+        on_delete=models.SET_NULL,
+        null=True,
+        blank=True,
+        related_name='services',
+        verbose_name='Категория'
+    )
     organization = models.ForeignKey(
         'organizations.Organization',
         on_delete=models.CASCADE,

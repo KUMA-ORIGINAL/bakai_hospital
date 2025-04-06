@@ -25,6 +25,8 @@ FROM python:3.12.8-alpine3.20
 ENV APP_HOME=/app
 WORKDIR $APP_HOME
 
+RUN apk update && apk add --no-cache gettext && rm -rf /var/lib/apt/lists/*
+
 # install dependencies
 COPY --from=builder /app/wheels /wheels
 COPY --from=builder /app/requirements.txt .

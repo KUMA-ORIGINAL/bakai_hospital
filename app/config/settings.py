@@ -144,6 +144,9 @@ USE_I18N = True
 
 USE_TZ = True
 
+LOCALE_PATHS = [
+    BASE_DIR / 'locale',
+]
 
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'static'
@@ -394,6 +397,12 @@ UNFOLD = {
                         "title": _("Услуги"),
                         "icon": "construction",
                         "link": reverse_lazy("admin:services_service_changelist"),
+                        'permission': 'account.admin_permissions.permission_callback_for_doctor_and_accountant',
+                    },
+                    {
+                        "title": _("Категории"),
+                        "icon": "category",
+                        "link": reverse_lazy("admin:services_category_changelist"),
                         'permission': 'account.admin_permissions.permission_callback_for_doctor_and_accountant',
                     },
                 ],

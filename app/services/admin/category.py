@@ -1,31 +1,22 @@
 from django.contrib import admin
-from modeltranslation.admin import TabbedTranslationAdmin
 
 from account.models import ROLE_ADMIN
-from ..models import Service
 from common.admin import BaseModelAdmin
+from ..models import Category
 
 
-@admin.register(Service)
-class ServiceAdmin(BaseModelAdmin, TabbedTranslationAdmin):
-    search_fields = ("name", "organization__name")
+@admin.register(Category)
+class CategoryAdmin(BaseModelAdmin):
+    search_fields = ("name",)
     ordering = ("name",)
     list_per_page = 50
 
-    def get_list_filter(self, request):
-        list_filter = ("organization",)
-        if request.user.is_superuser:
-            pass
-        elif request.user.role == ROLE_ADMIN:
-            list_filter = ()
-        return list_filter
-
     def get_list_display(self, request):
-        list_display = ("id", "name", "price", 'category', "organization", 'detail_link')
+        list_display = ("id", "name", 'detail_link')
         if request.user.is_superuser:
             pass
         elif request.user.role == ROLE_ADMIN:
-            list_display = ("name", "price", 'category', 'detail_link')
+            list_display = ("name", 'detail_link')
         return list_display
 
     def get_exclude(self, request, obj=None):
@@ -47,4 +38,3 @@ class ServiceAdmin(BaseModelAdmin, TabbedTranslationAdmin):
             return qs
         elif request.user.role == ROLE_ADMIN:
             return qs.filter(organization=request.user.organization)
-
