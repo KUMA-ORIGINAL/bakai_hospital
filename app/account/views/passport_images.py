@@ -13,12 +13,15 @@ from ..utils import send_to_openai
 class PassportOCRView(APIView):
     serializer_class = PassportImagesSerializer
 
+
     @staticmethod
     def encode_image_to_base64(image, quality=50, max_size=(800, 800)):
         img = Image.open(image)
-        img.thumbnail(max_size)  # Уменьшаем размер
+        img.thumbnail(max_size)  # Уменьшаем размер изображения
 
-        # Сохраняем в памяти с уменьшенным качеством
+        if img.mode in ("RGBA", "P"):
+            img = img.convert("RGB")
+
         img_bytes = io.BytesIO()
         img.save(img_bytes, format="JPEG", quality=quality)
 
