@@ -56,7 +56,6 @@ INSTALLED_APPS = [
     'drf_spectacular',
     'django_filters',
     'corsheaders',
-    'cachalot',
     "import_export",
     "simple_history",
 
@@ -182,33 +181,6 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 CSRF_TRUSTED_ORIGINS = [f"https://{DOMAIN}", f"http://{DOMAIN}"]
 
 AUTH_USER_MODEL = 'account.User'
-
-# CACHES = {
-#     'default': {
-#         'BACKEND': 'django_redis.cache.RedisCache',
-#         'LOCATION': 'redis://redis:6379/1',
-#         'OPTIONS': {
-#             'CLIENT_CLASS': 'django_redis.client.DefaultClient',
-#         }
-#     }
-# }
-
-# CACHALOTE_ONLY_CACHABLE_MODELS = (
-#     'menu.category',          # Кешировать только эти модели
-#     'menu.product',  # Кешировать только эти модели
-#     'menu.modificator',  # Кешировать только эти модели
-# )
-# CACHALOT_TIMEOUT = 60 * 30
-#
-# CHANNEL_LAYERS = {
-#     'default': {
-#         'BACKEND': 'channels_redis.core.RedisChannelLayer',
-#         'CONFIG': {
-#             "hosts": ['redis://redis:6379/2'],  # Используем другой слот Redis (например, /2)
-#         },
-#     },
-# }
-
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Hospital',
