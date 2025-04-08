@@ -153,7 +153,7 @@ LOCALE_PATHS = [
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'static'
 STATICFILES_DIRS = [
-    BASE_DIR / "common/static",
+    BASE_DIR / "common/site_icons",
 ]
 
 MEDIA_URL = '/media/'
@@ -292,8 +292,8 @@ UNFOLD = {
     "SITE_HEADER": "Национальный госпиталь",
     "SITE_URL": "/",
     "SITE_ICON": {
-        "light": lambda request: static("common/icon.svg"),  # light mode
-        "dark": lambda request: static("common/icon.svg"),  # dark mode
+        "light": lambda request: static("icons/icon.svg"),  # light mode
+        "dark": lambda request: static("icons/icon.svg"),  # dark mode
     },
     "SITE_SYMBOL": "settings",  # symbol from icon set
     "SHOW_HISTORY": True, # show/hide "History" button, default: True
