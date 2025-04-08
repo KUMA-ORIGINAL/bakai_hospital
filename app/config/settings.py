@@ -37,6 +37,7 @@ else:
 
 
 INSTALLED_APPS = [
+    'daphne',
     'modeltranslation',
     'unfold',
     "unfold.contrib.filters",
@@ -58,6 +59,7 @@ INSTALLED_APPS = [
     'corsheaders',
     "import_export",
     "simple_history",
+    'channels',
 
     'account',
     'services',
@@ -106,6 +108,7 @@ TEMPLATES = [
 
 
 WSGI_APPLICATION = 'config.wsgi.application'
+ASGI_APPLICATION = 'config.asgi.application'
 
 DATABASES = {
     'default': {
@@ -148,7 +151,10 @@ LOCALE_PATHS = [
 ]
 
 STATIC_URL = '/static/'
-STATIC_ROOT = BASE_DIR / 'static'
+# STATIC_ROOT = BASE_DIR / 'static'
+STATICFILES_DIRS = [
+    BASE_DIR / "static",
+]
 
 MEDIA_URL = '/media/'
 MEDIA_ROOT = BASE_DIR / 'media'
@@ -181,6 +187,15 @@ EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
 CSRF_TRUSTED_ORIGINS = [f"https://{DOMAIN}", f"http://{DOMAIN}"]
 
 AUTH_USER_MODEL = 'account.User'
+
+CHANNEL_LAYERS = {
+    'default': {
+        'BACKEND': 'channels_redis.core.RedisChannelLayer',
+        'CONFIG': {
+            "hosts": ['redis://redis:6379/2'],  # Используем другой слот Redis (например, /2)
+        },
+    },
+}
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Hospital',
@@ -273,9 +288,13 @@ LOGGING = {
 }
 
 UNFOLD = {
-    "SITE_TITLE": 'Hospital',
-    "SITE_HEADER": "Hospital",
+    "SITE_TITLE": 'Национальный госпиталь',
+    "SITE_HEADER": "Национальный госпиталь",
     "SITE_URL": "/",
+    "SITE_ICON": {
+        "light": lambda request: static("common/icon.svg"),  # light mode
+        "dark": lambda request: static("common/icon.svg"),  # dark mode
+    },
     "SITE_SYMBOL": "settings",  # symbol from icon set
     "SHOW_HISTORY": True, # show/hide "History" button, default: True
     "SHOW_VIEW_ON_SITE": True, # show/hide "View on site" button, default: True

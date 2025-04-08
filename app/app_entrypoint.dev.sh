@@ -1,10 +1,12 @@
 #!/bin/sh
 
-# Run database migrations
+cd /app
+
+echo "Applying migrations..."
 python manage.py migrate
 
-# Uncomment this line if you need to collect static files
-# python manage.py collectstatic --noinput
+echo "Collecting static files..."
+python manage.py collectstatic --noinput
 
-# Start the Django development server on all interfaces, port 8000
+echo "Starting Django development server..."
 python manage.py runserver 0.0.0.0:8000

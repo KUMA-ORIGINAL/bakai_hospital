@@ -1,5 +1,8 @@
 import requests
 import json
+
+from asgiref.sync import async_to_sync
+from channels.layers import get_channel_layer
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 from django.utils.decorators import method_decorator
@@ -52,6 +55,16 @@ class PaymentWebhookViewSet(viewsets.ViewSet):
                 logger.info(f"Обновление статуса транзакции {transaction.id}: {transaction.status} → {payment_status}")
                 transaction.status = payment_status
                 transaction.save(update_fields=["status"])
+
+                channel_layer = get_channel_layer()
+                async_to_sync(channel_layer.group_send)(
+                    f"transaction_{transaction.id}",
+                    {
+                        "type": "transaction_status_updated",
+                        "transaction_id": transaction.id,
+                        "status": transaction.status,
+                    }
+                )
             else:
                 logger.info(f"Повторное получение webhook: статус уже установлен — {payment_status}")
 

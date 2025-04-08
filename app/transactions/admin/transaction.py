@@ -31,16 +31,6 @@ class TransactionAdmin(SimpleHistoryAdmin, BaseModelAdmin, ExportActionModelAdmi
 
     export_form_class = ExportForm
 
-    fieldsets = (
-        (None, {
-            "fields": ("patient", "staff", "total_price", "comment", "phone_number", "pay_method", "status", "organization")
-        }),
-        ('Дополнительная информация', {
-            "fields": ("created_at",),
-            "classes": ("collapse",)
-        }),
-    )
-
     def get_list_filter(self, request):
         list_filter = ("pay_method", "status", "organization", ("created_at", RangeDateTimeFilter))
         if request.user.is_superuser:
@@ -60,23 +50,19 @@ class TransactionAdmin(SimpleHistoryAdmin, BaseModelAdmin, ExportActionModelAdmi
         return list_display
 
     def get_fieldsets(self, request, obj=None):
-        fieldsets = (
-            (None, {
-                "fields": (
-                "patient", "staff", "total_price", "comment", "phone_number", "pay_method", "status", "organization")
-            }),
-            ('Дополнительная информация', {
-                "fields": ("created_at",),
-                "classes": ("collapse",)
-            }),
-        )
         if request.user.is_superuser:
-            pass
+            fields = (
+                "created_at", "patient", "staff", "total_price", "comment", "phone_number",
+                "pay_method", "status", "organization"
+            )
         elif request.user.role in (ROLE_ADMIN, ROLE_DOCTOR, ROLE_ACCOUNTANT):
-            fieldsets[0][1]['fields'] = (
-                "patient", "staff", "total_price", "comment", "phone_number", "pay_method", "status")
-        return fieldsets
-
+            fields = (
+                "created_at", "patient", "staff", "total_price", "comment", "phone_number",
+                "pay_method", "status",
+            )
+        return (
+            (None, {"fields": fields}),
+        )
 
     def save_model(self, request, obj, form, change):
         if request.user.role == ROLE_ADMIN:
