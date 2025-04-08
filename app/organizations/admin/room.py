@@ -1,8 +1,11 @@
 from django.contrib import admin
+from django.http import HttpResponse
+from unfold.decorators import action
 
 from account.models import ROLE_ADMIN
 from ..models import Room, Building
 from common.admin import BaseModelAdmin
+from ..services import create_pdf_with_qr_only
 
 
 @admin.register(Room)
@@ -12,6 +15,18 @@ class RoomAdmin(BaseModelAdmin):
     ordering = ("room_number",)
     autocomplete_fields = ("services",)
 
+    actions_detail = ('download_qr_actions_detail',)
+
+    @action(
+        description="Cкачать qr-code",
+        url_path="download_qr_actions_detail-url",
+    )
+    def download_qr_actions_detail(self, request, object_id):
+        qr_url = f"https://hospital.operator.kg/rooms/{object_id}"
+        output_pdf_stream = create_pdf_with_qr_only(qr_url)
+        response = HttpResponse(output_pdf_stream, content_type='application/pdf')
+        response['Content-Disposition'] = f'attachment; filename="qr_code_room_id_{object_id}.pdf"'
+        return response
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
         if request.user.role == ROLE_ADMIN:
