@@ -124,3 +124,12 @@ msgstr "Дата по"
 
 msgid "Apply Filters"
 msgstr "Применить фильтры"
+
+msgid "Welcome back to"
+msgstr "С возвращением на"
+
+msgid "Return to site"
+msgstr "Вернуться на сайт"
+
+msgid "You have been successfully logged out from the administration"
+msgstr "Вы успешно вышли из административной панели"

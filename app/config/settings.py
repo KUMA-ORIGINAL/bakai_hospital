@@ -298,6 +298,9 @@ UNFOLD = {
     "SITE_SYMBOL": "settings",  # symbol from icon set
     "SHOW_HISTORY": True, # show/hide "History" button, default: True
     "SHOW_VIEW_ON_SITE": True, # show/hide "View on site" button, default: True
+    "LOGIN": {
+        "image": lambda request: static("icons/login-bg.webp"),
+    },
     "BORDER_RADIUS": "6px",
     "COLORS": {
         "base": {
