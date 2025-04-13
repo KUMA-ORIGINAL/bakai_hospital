@@ -22,19 +22,39 @@ def send_to_openai(front_image_base64, back_image_base64):
         client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
 
         messages = [
-            {"role": "system",
-             "content": "Ты OCR-специалист. Проанализируй текст на изображениях паспорта и верни только JSON."},
-            {"role": "user", "content": [
-                {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{front_image_base64}"}},
-                {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{back_image_base64}"}},
-                {"type": "text",
-                 "text": (
-                     'Распознай паспорт, только кириллицу и числа. Верни **чистый JSON**, строго в таком формате: '
-                     '{"inn": "", "first_name": "", "last_name": "", "patronymic": "", '
-                     '"gender": "", "date_of_birth": "", "passport_number": ""}. '
-                     'Формат дат возвращай в виде - YYYY-MM-DD. Не добавляй никакой другой текст, кроме JSON!'
-                 )}
-            ]}
+            {
+                "role": "system",
+                "content": (
+                    "Ты профессиональный OCR-специалист.\n"
+                    "Твоя задача: точно анализировать изображения паспорта (переднюю и заднюю стороны) "
+                    "и вернуть только нужные данные в формате чистого JSON без каких-либо пояснений."
+                )
+            },
+            {
+                "role": "user",
+                "content": [
+                    {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{front_image_base64}"}},
+                    {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{back_image_base64}"}},
+                    {"type": "text",
+                     "text": (
+                         "Распознай текст на паспорте.\n"
+                         "Извлеки строго следующие данные:\n"
+                         "- inn — ИНН (если есть, иначе \"\")\n"
+                         "- first_name — Имя (предпочтительно кириллицей, если доступно)\n"
+                         "- last_name — Фамилия (предпочтительно кириллицей, если доступно)\n"
+                         "- patronymic — Отчество (если есть, иначе \"\")\n"
+                         "- gender — Пол (М или Ж)\n"
+                         "- date_of_birth — Дата рождения в формате YYYY-MM-DD\n"
+                         "- passport_number — Номер паспорта или ID-карты\n\n"
+                         "Важно:\n"
+                         "- Используй только кириллицу.\n"
+                         "- Формат даты строго YYYY-MM-DD.\n"
+                         "- Пол указывай одной буквой: 'М' (мужской) или 'Ж' (женский).\n"
+                         "- Если данных нет, оставляй пустую строку \"\".\n"
+                         "- Никаких лишних слов, описаний или пояснений — только JSON, ровно по шаблону."
+                     )}
+                ]
+            }
         ]
 
         logger.info("Отправка запроса в OpenAI")

@@ -70,7 +70,6 @@ class Patient(models.Model):
         auto_now_add=True,
         verbose_name='Дата регистрации'
     )
-
     organization = models.ForeignKey(
         'organizations.Organization',
         on_delete=models.CASCADE,

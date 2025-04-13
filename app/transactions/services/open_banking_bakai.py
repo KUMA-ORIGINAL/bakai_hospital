@@ -17,7 +17,7 @@ def generate_payment_link(transaction):
         "amount": str(transaction.total_price),  # Итоговая сумма заказа
         "transaction_id": str(transaction.id),  # ID заказа
         "comment": f"Оплата заказа #{transaction.id} hospital",  # Комментарий
-        "redirect_url": f"https://hospital.mnogo.kg/api/payment/webhook/",
+        "redirect_url": f"https://hospital.operator.kg/",
         'token': PAYMENT_API_TOKEN,
     }
 
