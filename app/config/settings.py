@@ -153,7 +153,7 @@ LOCALE_PATHS = [
 STATIC_URL = '/static/'
 STATIC_ROOT = BASE_DIR / 'static'
 STATICFILES_DIRS = [
-    BASE_DIR / "common/site_icons",
+    BASE_DIR / "common/static",
 ]
 
 MEDIA_URL = '/media/'

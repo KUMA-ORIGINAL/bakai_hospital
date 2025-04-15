@@ -1,5 +1,6 @@
 from django.contrib import admin
 from django.http import HttpResponse
+from django.shortcuts import get_object_or_404
 from unfold.decorators import action
 
 from account.models import ROLE_ADMIN
@@ -23,7 +24,21 @@ class RoomAdmin(BaseModelAdmin):
     )
     def download_qr_actions_detail(self, request, object_id):
         qr_url = f"https://hospital.operator.kg/rooms/{object_id}"
-        output_pdf_stream = create_pdf_with_qr_only(qr_url)
+
+        room = get_object_or_404(Room, id=object_id)
+
+        organization = room.department.organization.name  # или room.organization, если просто строка
+        department = room.department.name  # или room.department
+        building = room.building  # строка типа "Корпус A"
+        room_number = room.room_number  # или room.room_number
+
+        output_pdf_stream = create_pdf_with_qr_only(
+            qr_url=qr_url,
+            organization=organization,
+            department=department,
+            building=building,
+            room=room_number
+        )
         response = HttpResponse(output_pdf_stream, content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename="qr_code_room_id_{object_id}.pdf"'
         return response
