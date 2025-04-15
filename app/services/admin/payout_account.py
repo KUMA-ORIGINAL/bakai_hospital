@@ -1,31 +1,30 @@
 from django.contrib import admin
-from modeltranslation.admin import TabbedTranslationAdmin
-
 from account.models import ROLE_ADMIN
-from ..models import Service
+from ..models import PayoutAccount
 from common.admin import BaseModelAdmin
 
 
-@admin.register(Service)
-class ServiceAdmin(BaseModelAdmin, TabbedTranslationAdmin):
-    search_fields = ("name", "organization__name")
+@admin.register(PayoutAccount)
+class PayoutAccountAdmin(BaseModelAdmin):
+    list_display = ("id", "name", "provider", "organization")
+    search_fields = ("name", "provider", "organization__name")
     ordering = ("name",)
     list_per_page = 50
 
     def get_list_filter(self, request):
-        list_filter = ("organization",)
+        list_filter = ("provider", "organization")
         if request.user.is_superuser:
             pass
         elif request.user.role == ROLE_ADMIN:
-            list_filter = ()
+            list_filter = ("provider",)
         return list_filter
 
     def get_list_display(self, request):
-        list_display = ("id", "name", "price", 'category', 'payout_account', "organization", 'detail_link')
+        list_display = ("id", "name", "provider", "organization", 'detail_link')
         if request.user.is_superuser:
             pass
         elif request.user.role == ROLE_ADMIN:
-            list_display = ("name", "price", 'category', 'detail_link')
+            list_display = ("name", "provider", 'detail_link')
         return list_display
 
     def get_exclude(self, request, obj=None):
@@ -33,7 +32,7 @@ class ServiceAdmin(BaseModelAdmin, TabbedTranslationAdmin):
         if request.user.is_superuser:
             pass
         elif request.user.role == ROLE_ADMIN:
-            exclude = ('organization',)
+            exclude = ("organization",)
         return exclude
 
     def save_model(self, request, obj, form, change):

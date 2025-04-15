@@ -37,5 +37,4 @@ class PatientCreateSerializer(serializers.ModelSerializer):
     def create(self, validated_data):
         organization = Organization.objects.filter(name='Национальный Госпиталь').first()
         validated_data['organization_id'] = organization.pk
-
         return super().create(validated_data)

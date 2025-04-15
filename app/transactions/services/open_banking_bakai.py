@@ -13,12 +13,18 @@ logger = logging.getLogger(__name__)
 
 
 def generate_payment_link(transaction):
+    first_service = transaction.services.first().service
+    payout_account = first_service.payout_account
+
+    if not payout_account or not payout_account.payout_token:
+        return None
+
     payload = {
         "amount": str(transaction.total_price),  # Итоговая сумма заказа
         "transaction_id": str(transaction.id),  # ID заказа
         "comment": f"Оплата заказа #{transaction.id} hospital",  # Комментарий
         "redirect_url": f"https://hospital.operator.kg/",
-        'token': PAYMENT_API_TOKEN,
+        'token': payout_account.payout_token,
     }
 
     headers = {

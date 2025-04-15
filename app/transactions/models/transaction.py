@@ -10,8 +10,9 @@ class Transaction(models.Model):
     phone_number = models.CharField(max_length=20, verbose_name="Номер телефона")
     pay_method = models.CharField(
         max_length=50,
-        choices=[('cash', 'Наличные'), ('bakai_bank', 'Bakai Bank')],
-        verbose_name="Способ оплаты"
+        choices=[('bakai_bank', 'Bakai Bank')],
+        verbose_name="Способ оплаты",
+        default='bakai_bank'
     )
     status = models.CharField(
         max_length=50,

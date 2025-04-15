@@ -14,9 +14,12 @@ from ..resources import TransactionResource
 
 class TransactionServiceInline(TabularInline):
     model = TransactionService
-    extra = 1
+    extra = 0
     fields = ("service", "service_price", 'quantity')
     readonly_fields = ("service_price",)
+
+    def has_add_permission(self, request, obj=None):
+        return False
 
 
 @admin.register(Transaction)

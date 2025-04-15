@@ -28,6 +28,11 @@ class TransactionCreateSerializer(serializers.ModelSerializer):
         services_data = validated_data.pop('services')
 
         service_instances = [item['service'] for item in services_data]
+
+        payout_accounts = {service.payout_account_id for service in service_instances}
+        if len(payout_accounts) > 1:
+            raise serializers.ValidationError("Все услуги должны иметь один и тот же счёт для выплат.")
+
         total_price = sum(service.price for service in service_instances)
         validated_data['total_price'] = total_price
 

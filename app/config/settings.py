@@ -415,6 +415,17 @@ UNFOLD = {
                 ],
             },
             {
+                "title": _("Счета для выплат"),
+                "separator": True,
+                "items": [
+                    {
+                        "title": _("Счета для выплат"),
+                        "icon": "payments",  # или "account_balance", см. ниже список иконок
+                        "link": reverse_lazy("admin:services_payoutaccount_changelist"),
+                    },
+                ],
+            },
+            {
                 "title": _("Транзакции"),
                 "separator": True,
                 "items": [

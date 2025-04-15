@@ -36,6 +36,14 @@ class Service(models.Model):
         verbose_name='Организация',
         related_name='services'
     )
+    payout_account = models.ForeignKey(
+        'PayoutAccount',
+        on_delete=models.PROTECT,
+        verbose_name='Счёт для выплат',
+        related_name='services',
+        blank=True,
+        null=True,
+    )
 
     def __str__(self):
         return self.name
