@@ -10,10 +10,10 @@ from ..serializers import PatientSerializer, PatientCreateSerializer
     tags=['Patient'],
     parameters=[
         OpenApiParameter(
-            name='search',  # Имя параметра
-            description='Поиск по INN',  # Описание параметра
-            required=False,  # Параметр необязательный
-            type=str  # Тип данных
+            name='search',
+            description='Поиск по INN',
+            required=False,
+            type=str
         )
     ]
 )
@@ -27,9 +27,6 @@ class PatientViewSet(viewsets.GenericViewSet,
         return PatientCreateSerializer
 
     def get_queryset(self):
-        """
-        Определяет поиск по параметрам phone_number и inn.
-        """
         queryset = Patient.objects.all()
         search_query = self.request.GET.get('search', None)
         if search_query:

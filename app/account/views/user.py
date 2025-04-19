@@ -17,10 +17,10 @@ from ..serializers import UserSerializer
             type=int
         ),
         OpenApiParameter(
-            name='search',  # Имя параметра
-            description='Поиск по ФИО staff',  # Описание параметра
-            required=False,  # Параметр необязательный
-            type=str  # Тип данных
+            name='search',
+            description='Поиск по ФИО staff',
+            required=False,
+            type=str
         )
     ]
 )

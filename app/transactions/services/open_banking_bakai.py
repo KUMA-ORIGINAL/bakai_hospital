@@ -1,15 +1,10 @@
 import requests
-import json
 import logging
 
-from django.conf import settings
+logger = logging.getLogger(__name__)
 
-from config.settings import DOMAIN
 
 PAYMENT_API_URL = "https://pay.operator.kg/api/v1/payments/make-payment-link/"
-PAYMENT_API_TOKEN = settings.PAYMENT_API_TOKEN
-
-logger = logging.getLogger(__name__)
 
 
 def generate_payment_link(transaction):
@@ -20,9 +15,9 @@ def generate_payment_link(transaction):
         return None
 
     payload = {
-        "amount": str(transaction.total_price),  # Итоговая сумма заказа
-        "transaction_id": str(transaction.id),  # ID заказа
-        "comment": f"Оплата заказа #{transaction.id} hospital",  # Комментарий
+        "amount": str(transaction.total_price),
+        "transaction_id": str(transaction.id),
+        "comment": f"Оплата заказа #{transaction.id} hospital",
         "redirect_url": f"https://hospital.operator.kg/",
         'token': payout_account.payout_token,
     }

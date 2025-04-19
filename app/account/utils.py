@@ -8,6 +8,7 @@ from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
+
 def normalize_date(date_string):
     try:
         return datetime.strptime(date_string, "%d.%m.%Y").strftime("%Y-%m-%d")
@@ -16,7 +17,6 @@ def normalize_date(date_string):
 
 
 def send_to_openai(front_image_base64, back_image_base64):
-    """ Отправляет изображения паспорта в OpenAI и получает JSON-ответ на русском языке """
     try:
         logger.info("Инициализация клиента OpenAI")
         client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)

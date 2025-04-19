@@ -36,9 +36,9 @@ class UserManager(BaseUserManager):
         return self._create_user(email, password, **extra_fields)
 
 
-ROLE_ACCOUNTANT = 'accountant'  # Роль бухгалтера
-ROLE_DOCTOR = 'doctor'  # Роль врача
-ROLE_ADMIN = 'admin'  # Роль админа
+ROLE_ACCOUNTANT = 'accountant'
+ROLE_DOCTOR = 'doctor'
+ROLE_ADMIN = 'admin'
 
 
 class User(AbstractUser):
@@ -48,8 +48,8 @@ class User(AbstractUser):
         (ROLE_ADMIN, "Админ"),
     )
 
-    STATUS_WORKING = 'working'  # Работает
-    STATUS_FIRED = 'fired'  # Уволен
+    STATUS_WORKING = 'working'
+    STATUS_FIRED = 'fired'
 
     STATUS_CHOICES = (
         (STATUS_WORKING, 'Работает'),
@@ -142,15 +142,15 @@ class User(AbstractUser):
     )
 
     username = None
-    USERNAME_FIELD = "email"  # Use email as the unique identifier
-    REQUIRED_FIELDS = ['first_name', 'last_name']  # Required fields when creating a superuser
+    USERNAME_FIELD = "email"
+    REQUIRED_FIELDS = ['first_name', 'last_name']
 
     objects = UserManager()
 
     class Meta:
         ordering = ('-date_joined',)
-        verbose_name = "User"
-        verbose_name_plural = "Users"
+        verbose_name = "Пользователь"
+        verbose_name_plural = "Пользователи"
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"

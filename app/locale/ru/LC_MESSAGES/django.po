@@ -133,3 +133,21 @@ msgstr "Вернуться на сайт"
 
 msgid "You have been successfully logged out from the administration"
 msgstr "Вы успешно вышли из административной панели"
+
+msgid "Select value"
+msgstr "Выберите значение"
+
+msgid "By"
+msgstr "По"
+
+msgid "Choose file to upload"
+msgstr "Выберите файл для загрузки"
+
+msgid ""
+"Raw passwords are not stored, so there is no way to see this user’s password, "
+"but you can change the password using "
+"<a href=\"{}\" class=\"text-primary-600 dark:text-primary-500\">this form</a>."
+msgstr ""
+"Пароли в открытом виде не сохраняются, поэтому вы не можете увидеть пароль этого пользователя, "
+"но вы можете изменить его с помощью "
+"<a href=\"{}\" class=\"text-primary-600 dark:text-primary-500\">этой формы</a>."

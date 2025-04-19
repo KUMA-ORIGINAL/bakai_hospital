@@ -65,7 +65,6 @@ INSTALLED_APPS = [
     'services',
     'organizations',
     'transactions',
-    'logs_app',
     'common',
 ]
 
@@ -175,8 +174,8 @@ MODELTRANSLATION_DEFAULT_LANGUAGE = 'ru'
 MODELTRANSLATION_LANGUAGES = ('ru', 'en', 'ky')
 MODELTRANSLATION_FALLBACK_LANGUAGES = {
     'default': ('ru',),
-    'en': ('ru', 'ky'),  # Для английского fallback на русский и кыргызский
-    'ky': ('ru',),  # Для кыргызского fallback на русский
+    'en': ('ru', 'ky'),
+    'ky': ('ru',),
 }
 MODELTRANSLATION_AUTO_POPULATE = True
 
@@ -192,7 +191,7 @@ CHANNEL_LAYERS = {
     'default': {
         'BACKEND': 'channels_redis.core.RedisChannelLayer',
         'CONFIG': {
-            "hosts": ['redis://redis:6379/2'],  # Используем другой слот Redis (например, /2)
+            "hosts": ['redis://redis:6379/2'],
         },
     },
 }
@@ -258,12 +257,12 @@ LOGGING = {
     },
     'handlers': {
         'console': {
-            'level': 'INFO',  # Можно изменить на 'DEBUG' для более подробного вывода
+            'level': 'INFO',
             'class': 'logging.StreamHandler',
             'formatter': 'simple',
         },
         'file': {
-            'level': 'INFO',  # Логи с уровнем DEBUG и выше будут записываться в файл
+            'level': 'INFO',
             'class': 'logging.FileHandler',
             'filename': 'django_app.log',
             'formatter': 'verbose',
@@ -292,12 +291,12 @@ UNFOLD = {
     "SITE_HEADER": "Национальный госпиталь",
     "SITE_URL": "/",
     "SITE_ICON": {
-        "light": lambda request: static("icons/icon.svg"),  # light mode
-        "dark": lambda request: static("icons/icon.svg"),  # dark mode
+        "light": lambda request: static("icons/icon.svg"),
+        "dark": lambda request: static("icons/icon.svg"),
     },
-    "SITE_SYMBOL": "settings",  # symbol from icon set
-    "SHOW_HISTORY": True, # show/hide "History" button, default: True
-    "SHOW_VIEW_ON_SITE": True, # show/hide "View on site" button, default: True
+    "SITE_SYMBOL": "settings",
+    "SHOW_HISTORY": True,
+    "SHOW_VIEW_ON_SITE": True,
     "LOGIN": {
         "image": lambda request: static("icons/login-bg.webp"),
     },
@@ -316,19 +315,6 @@ UNFOLD = {
             "900": "17 24 39",
             "950": "3 7 18",
         },
-        # "primary": {
-        #     "50": "250 245 255",
-        #     "100": "243 232 255",
-        #     "200": "233 213 255",
-        #     "300": "216 180 254",
-        #     "400": "192 132 252",
-        #     "500": "168 85 247",
-        #     "600": "147 51 234",
-        #     "700": "126 34 206",
-        #     "800": "107 33 168",
-        #     "900": "88 28 135",
-        #     "950": "59 7 100",
-        # },
         "primary": {
           "50": "239 246 255",
           "100": "219 234 254",
@@ -352,8 +338,8 @@ UNFOLD = {
         },
     },
     "SIDEBAR": {
-        "show_search": False,  # Search in applications and models names
-        "show_all_applications": False,  # Dropdown with all applications and models
+        "show_search": False,
+        "show_all_applications": False,
         "navigation": [
             {
                 "title": _("Навигация"),
@@ -384,18 +370,6 @@ UNFOLD = {
                     },
                 ],
             },
-            # {
-            #     "title": _("Логи"),
-            #     "separator": True,
-            #     "items": [
-            #         {
-            #             "title": _("Логи"),
-            #             "icon": "history",
-            #             "link": reverse_lazy("admin:logs_app_log_changelist"),
-            #             'permission': 'account.admin_permissions.permission_callback_for_doctor_and_accountant',
-            #         },
-            #     ],
-            # },
             {
                 "title": _("Услуги"),
                 "separator": True,
@@ -420,7 +394,7 @@ UNFOLD = {
                 "items": [
                     {
                         "title": _("Счета для выплат"),
-                        "icon": "payments",  # или "account_balance", см. ниже список иконок
+                        "icon": "payments",
                         "link": reverse_lazy("admin:services_payoutaccount_changelist"),
                     },
                 ],
@@ -476,16 +450,4 @@ UNFOLD = {
             },
         ],
     },
-    # "TABS": [
-    #     {
-    #         "models": ["venues.venue"],
-    #         "items": [
-    #             {
-    #                 "title": "Генерация qr-code",
-    #                 "icon": "grade",
-    #                 "link": reverse_lazy("admin:qr"),
-    #             },
-    #         ],
-    #     },
-    # ],
 }
