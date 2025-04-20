@@ -126,7 +126,7 @@ msgid "Apply Filters"
 msgstr "Применить фильтры"
 
 msgid "Welcome back to"
-msgstr "С возвращением на"
+msgstr "С возвращением"
 
 msgid "Return to site"
 msgstr "Вернуться на сайт"

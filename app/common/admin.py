@@ -8,12 +8,12 @@ from unfold.admin import ModelAdmin as UnfoldModelAdmin
 
 class BaseModelAdmin(UnfoldModelAdmin):
 
-    @admin.display(description=_("Подробнее"))
+    @admin.display(description=_("Действие"))
     def detail_link(self, obj):
         if obj and obj.id:
             url = reverse('admin:%s_%s_change' % (obj._meta.app_label, obj._meta.model_name),
                           args=[obj.id])
             return mark_safe(
-                '<a class="button" href="{}">{}</a>'.format(url, _("Подробнее"))
+                '<a class="button" href="{}">{}</a>'.format(url, _("Редактировать"))
             )
         return "-"

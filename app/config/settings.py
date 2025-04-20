@@ -389,12 +389,12 @@ UNFOLD = {
                         "link": reverse_lazy("admin:services_service_changelist"),
                         'permission': 'account.admin_permissions.permission_callback_for_doctor_and_accountant',
                     },
-                    {
-                        "title": _("Категории"),
-                        "icon": "category",
-                        "link": reverse_lazy("admin:services_category_changelist"),
-                        'permission': 'account.admin_permissions.permission_callback_for_doctor_and_accountant',
-                    },
+                    # {
+                    #     "title": _("Категории"),
+                    #     "icon": "category",
+                    #     "link": reverse_lazy("admin:services_category_changelist"),
+                    #     'permission': 'account.admin_permissions.permission_callback_for_doctor_and_accountant',
+                    # },
                 ],
             },
             {
@@ -413,7 +413,7 @@ UNFOLD = {
                 "separator": True,
                 "items": [
                     {
-                        "title": _("Транзакции"),
+                        "title": _("Оплаченные услуги"),
                         "icon": "account_balance_wallet",
                         "link": reverse_lazy("admin:transactions_transaction_changelist"),
                     },

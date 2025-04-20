@@ -5,6 +5,7 @@ from django.contrib.auth.models import Group
 from unfold.admin import ModelAdmin as UnfoldModelAdmin
 from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationForm
 
+from common.admin import BaseModelAdmin
 from organizations.models import Room
 from ..models import User, ROLE_ADMIN
 
@@ -17,16 +18,11 @@ class GroupAdmin(GroupAdmin, UnfoldModelAdmin):
 
 
 @admin.register(User)
-class UserAdmin(UserAdmin, UnfoldModelAdmin):
+class UserAdmin(UserAdmin, BaseModelAdmin):
     model = User
     form = UserChangeForm
     add_form = UserCreationForm
     change_password_form = AdminPasswordChangeForm
-
-    list_display_links = ('id', 'email')
-    search_fields = ('email', 'first_name', 'last_name', 'role')  # Поля для поиска
-    ordering = ('-date_joined',)  # Сортировка по дате присоединения
-    list_per_page = 20
 
     add_fieldsets = (
         (
@@ -37,13 +33,23 @@ class UserAdmin(UserAdmin, UnfoldModelAdmin):
                     "email",
                     "password1",
                     "password2",
+                    "first_name",
+                    "last_name",
+                    "position",
+                    "role",
+                    "status",
                 ),
             },
         ),
     )
 
+    list_display_links = ('id', 'email')
+    search_fields = ('email', 'first_name', 'last_name', 'role')  # Поля для поиска
+    ordering = ('-date_joined',)  # Сортировка по дате присоединения
+    list_per_page = 20
+
     def get_list_filter(self, request):
-        list_filter = ('role', 'status', 'is_active', 'is_staff')
+        list_filter = ('role', 'status', 'is_active', 'is_staff',)
         if request.user.is_superuser:
             pass
         elif request.user.role == ROLE_ADMIN:
@@ -51,28 +57,17 @@ class UserAdmin(UserAdmin, UnfoldModelAdmin):
         return list_filter
 
     def get_list_display(self, request):
-        list_display = ('id', 'email', 'first_name', 'last_name', 'role', 'status', 'organization')
+        list_display = ('id', 'email', 'first_name', 'last_name', 'role', 'position', 'specialization', 'status', 'organization', 'detail_link')
         if request.user.is_superuser:
             pass
         elif request.user.role == ROLE_ADMIN:
-            list_display = ('email', 'first_name', 'last_name', 'role', 'status')
+            list_display = ('email', 'first_name', 'last_name', 'role', 'position', 'specialization', 'status')
         return list_display
 
     def get_fieldsets(self, request, obj=None):
         fieldsets = (
             (None, {"fields": ("email", "password", 'role', 'status')}),
-            (
-                "Permissions",
-                {
-                    "fields": (
-                        "is_staff",
-                        "is_active",
-                        "is_superuser",
-                        "groups",
-                        "user_permissions",
-                    )
-                },
-            ),
+            ("Permissions", { "fields": ("is_staff", "is_active", "is_superuser","groups", "user_permissions",)}),
             ("Dates", {"fields": ("last_login", "date_joined")}),
             ('Personal info', {'fields': (
                 'first_name', 'last_name', 'patronymic', 'birthdate', 'phone_number',
@@ -81,10 +76,10 @@ class UserAdmin(UserAdmin, UnfoldModelAdmin):
         )
         if request.user.is_superuser:
             pass
-
         elif request.user.role == ROLE_ADMIN:
-            fieldsets = [fs for fs in fieldsets if fs[0] != "Permissions"]
-            fieldsets[3][1]['fields'] = ('room',)
+            # fieldsets = [fs for fs in fieldsets if fs[0] != "Permissions"]
+            # fieldsets[3][1]['fields'] = ('room',)
+            pass
         return fieldsets
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):

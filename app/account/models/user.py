@@ -111,7 +111,7 @@ class User(AbstractUser):
         max_length=50,
         choices=STATUS_CHOICES,
         default=STATUS_WORKING,
-        verbose_name='Статус (работает/уволен)'
+        verbose_name='Статус'
     )
     photo = models.ImageField(
         upload_to='staffs/photos/%Y/%m/%d/',
@@ -149,8 +149,8 @@ class User(AbstractUser):
 
     class Meta:
         ordering = ('-date_joined',)
-        verbose_name = "Пользователь"
-        verbose_name_plural = "Пользователи"
+        verbose_name = "Сотрудник"
+        verbose_name_plural = "Сотрудники"
 
     def __str__(self):
         return f"{self.first_name} {self.last_name}"
