@@ -33,7 +33,12 @@ class TransactionCreateSerializer(serializers.ModelSerializer):
         if len(payout_accounts) > 1:
             raise serializers.ValidationError("Все услуги должны иметь один и тот же счёт для выплат.")
 
-        total_price = sum(service.price for service in service_instances)
+        total_price = 0
+        for item in services_data:
+            service = item['service']
+            quantity = item.get('quantity', 1)
+            total_price += service.price * quantity
+
         validated_data['total_price'] = total_price
 
         organization = Organization.objects.filter(name='Национальный Госпиталь').first()
