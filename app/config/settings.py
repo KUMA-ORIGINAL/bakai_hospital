@@ -437,7 +437,7 @@ UNFOLD = {
                 "collapsible": False,
                 "items": [
                     {
-                        "title": _("Пользователи"),
+                        "title": _("Сотрудники"),
                         "icon": "person",
                         "link": reverse_lazy("admin:account_user_changelist"),
                         'permission': 'account.admin_permissions.permission_callback_for_doctor_and_accountant',
