@@ -66,3 +66,4 @@ class TransactionDetailSerializer(serializers.ModelSerializer):
             'created_at',
             'services',
         ]
+
