@@ -2,10 +2,12 @@ from datetime import timedelta
 from pathlib import Path
 
 import environ
+import sentry_sdk
 from django.templatetags.static import static
 from django.urls import reverse_lazy
 from django.utils.translation import gettext_lazy as _
 from import_export.formats.base_formats import XLSX
+from sentry_sdk.integrations.django import DjangoIntegration
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 
@@ -195,6 +197,13 @@ CHANNEL_LAYERS = {
         },
     },
 }
+
+sentry_sdk.init(
+    dsn=env('SENTRY_DSN'),
+    integrations=[DjangoIntegration()],
+    traces_sample_rate=1.0,  # Для мониторинга производительности. Можно уменьшить
+    send_default_pii=True,  # Отправлять пользовательские данные (если нужно)
+)
 
 SPECTACULAR_SETTINGS = {
     'TITLE': 'Hospital',

@@ -27,3 +27,4 @@ channels-redis==4.2.1
 daphne==4.1.2
 uvicorn==0.34.0
 websockets==14.2
+sentry-sdk[django]==2.26.1
