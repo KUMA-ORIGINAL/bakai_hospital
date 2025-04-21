@@ -202,7 +202,8 @@ sentry_sdk.init(
     dsn=env('SENTRY_DSN'),
     integrations=[DjangoIntegration()],
     traces_sample_rate=1.0,  # Для мониторинга производительности. Можно уменьшить
-    send_default_pii=True,  # Отправлять пользовательские данные (если нужно)
+    send_default_pii=True,
+    environment="dev" if DEBUG else "production",
 )
 
 SPECTACULAR_SETTINGS = {
