@@ -1,7 +1,17 @@
 from django.contrib import admin
 
 from common.admin import BaseModelAdmin
+from transactions.models import Transaction
 from ..models import Patient, ROLE_ADMIN, ROLE_DOCTOR
+
+
+class TransactionInline(admin.TabularInline):
+    model = Transaction
+    extra = 0
+    fields = ('created_at', 'staff', 'total_price', 'status', 'pay_method')
+    readonly_fields = ('created_at', 'staff', 'total_price', 'status', 'pay_method')
+    can_delete = False
+    show_change_link = True  # Добавляет ссылку на переход к транзакции
 
 
 @admin.register(Patient)
@@ -9,6 +19,7 @@ class PatientAdmin(BaseModelAdmin):
     search_fields = ('first_name', 'last_name', 'patronymic', 'inn', 'phone_number', 'passport_number')
     readonly_fields = ('created_at',)
     date_hierarchy = 'created_at'
+    inlines = (TransactionInline,)
 
     def get_list_filter(self, request):
         list_filter = ('gender', 'organization', 'created_at')

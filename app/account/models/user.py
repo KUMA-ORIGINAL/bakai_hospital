@@ -111,7 +111,8 @@ class User(AbstractUser):
         max_length=50,
         choices=STATUS_CHOICES,
         default=STATUS_WORKING,
-        verbose_name='Статус'
+        verbose_name='Статус',
+        blank=True,
     )
     photo = models.ImageField(
         upload_to='staffs/photos/%Y/%m/%d/',

@@ -42,8 +42,19 @@ class TransactionResource(resources.ModelResource):
         attribute='organization',
         column_name=Transaction._meta.get_field('organization').verbose_name
     )
+    services_summary = fields.Field(
+        column_name=_("Состав чека"),
+    )
 
     class Meta:
         model = Transaction
-        fields = ('id', 'patient', 'staff', 'total_price', 'comment', 'phone_number',
+        fields = ('id', 'patient', 'staff', 'total_price', 'services_summary', 'comment', 'phone_number',
                   'pay_method', 'status', 'created_at', 'organization')
+
+    def dehydrate_created_at(self, obj):
+        return obj.created_at.strftime('%Y-%m-%d %H:%M:%S')
+
+    def dehydrate_services_summary(self, obj):
+        return "; ".join(
+            s.service.name for s in obj.services.all()
+        )

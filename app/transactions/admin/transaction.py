@@ -76,7 +76,25 @@ class TransactionAdmin(SimpleHistoryAdmin, BaseModelAdmin, ExportActionModelAdmi
         qs = super().get_queryset(request)
         if request.user.is_superuser:
             return qs
-        elif request.user.role in (ROLE_ADMIN, ROLE_ACCOUNTANT):
+        if request.user.role == ROLE_ADMIN:
             return qs.filter(organization=request.user.organization)
+        elif request.user.role == ROLE_ACCOUNTANT:
+            return qs.filter(organization=request.user.organization, status='success')
         elif request.user.role == ROLE_DOCTOR:
-            return qs.filter(organization=request.user.organization, staff=request.user)
+            return qs.filter(organization=request.user.organization, staff=request.user, status='success')
+        return qs.none()
+
+    def has_change_permission(self, request, obj=None):
+        if request.user.is_superuser:
+            return True
+        return False
+
+    def has_delete_permission(self, request, obj=None):
+        if request.user.is_superuser:
+            return True
+        return False
+
+    def has_add_permission(self, request):
+        if request.user.is_superuser:
+            return True
+        return False

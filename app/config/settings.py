@@ -238,20 +238,6 @@ REST_FRAMEWORK = {
     ),
 }
 
-SIMPLE_JWT = {
-    "ACCESS_TOKEN_LIFETIME": timedelta(minutes=60),
-    "REFRESH_TOKEN_LIFETIME": timedelta(days=30),
-    "AUTH_HEADER_TYPES": ("Bearer",),
-    'UPDATE_LAST_LOGIN': True,
-}
-
-DJOSER = {
-    # 'SERIALIZERS': {
-    #     'user': 'account.serializers.UserSerializer',
-    #     'current_user': 'account.serializers.UserSerializer',
-    # },
-}
-
 LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,

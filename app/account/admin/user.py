@@ -21,32 +21,20 @@ class GroupAdmin(GroupAdmin, UnfoldModelAdmin):
 class UserAdmin(UserAdmin, BaseModelAdmin):
     model = User
     form = UserChangeForm
-    add_form = UserCreationForm
     change_password_form = AdminPasswordChangeForm
-
-    add_fieldsets = (
-        (
-            None,
-            {
-                "classes": ("wide",),
-                "fields": (
-                    "email",
-                    "password1",
-                    "password2",
-                    "first_name",
-                    "last_name",
-                    "position",
-                    "role",
-                    "status",
-                ),
-            },
-        ),
-    )
+    add_form = UserCreationForm
 
     list_display_links = ('id', 'email')
     search_fields = ('email', 'first_name', 'last_name', 'role')  # Поля для поиска
     ordering = ('-date_joined',)  # Сортировка по дате присоединения
     list_per_page = 20
+
+    add_fieldsets = (
+        (None, {
+            'classes': ('wide',),
+            'fields': ('email', 'password1', 'password2', "first_name", "last_name",),
+        }),
+    )
 
     def get_list_filter(self, request):
         list_filter = ('role', 'status', 'is_active', 'is_staff',)
@@ -65,21 +53,36 @@ class UserAdmin(UserAdmin, BaseModelAdmin):
         return list_display
 
     def get_fieldsets(self, request, obj=None):
-        fieldsets = (
-            (None, {"fields": ("email", "password", 'role', 'status')}),
-            ("Permissions", { "fields": ("is_staff", "is_active", "is_superuser","groups", "user_permissions",)}),
-            ("Dates", {"fields": ("last_login", "date_joined")}),
-            ('Personal info', {'fields': (
-                'first_name', 'last_name', 'patronymic', 'birthdate', 'phone_number',
-                'position', 'specialization', 'telegram_id', 'comment', 'photo')}),
-            ('Organization', {'fields': ('organization', 'room')}),
-        )
-        if request.user.is_superuser:
-            pass
-        elif request.user.role == ROLE_ADMIN:
-            # fieldsets = [fs for fs in fieldsets if fs[0] != "Permissions"]
-            # fieldsets[3][1]['fields'] = ('room',)
-            pass
+        if obj is None:
+            return self.add_fieldsets
+
+        fieldsets = [
+            (None, {
+                "fields": ("email", "password"),
+            }),
+            ("Права доступа", {
+                "fields": ("is_staff", "is_active", "is_superuser", "groups", "user_permissions"),
+            }),
+            ("Даты", {
+                "fields": ("last_login", "date_joined"),
+            }),
+            ("Личная информация", {
+                "fields": (
+                    "first_name", "last_name", "patronymic", "role", "status", "birthdate", "phone_number",
+                    "position", "specialization", "telegram_id", "comment", "photo"
+                ),
+            }),
+            ("Организация", {
+                "fields": ("organization", "room"),
+            }),
+        ]
+
+        if not request.user.is_superuser and request.user.role == ROLE_ADMIN:
+            fieldsets = [fs for fs in fieldsets if fs[0] != "Права доступа"]
+            for fs in fieldsets:
+                if fs[0] == "Организация":
+                    fs[1]["fields"] = ("room",)
+                    break
         return fieldsets
 
     def formfield_for_foreignkey(self, db_field, request, **kwargs):
