@@ -11,7 +11,10 @@ class TransactionInline(admin.TabularInline):
     fields = ('created_at', 'staff', 'total_price', 'status', 'pay_method')
     readonly_fields = ('created_at', 'staff', 'total_price', 'status', 'pay_method')
     can_delete = False
-    show_change_link = True  # Добавляет ссылку на переход к транзакции
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.select_related('staff')
 
 
 @admin.register(Patient)
