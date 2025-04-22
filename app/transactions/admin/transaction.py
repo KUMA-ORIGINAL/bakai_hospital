@@ -16,10 +16,14 @@ class TransactionServiceInline(TabularInline):
     model = TransactionService
     extra = 0
     fields = ("service", "service_price", 'quantity')
-    readonly_fields = ("service_price",)
+    readonly_fields = ('service', "service_price", 'quantity')
 
     def has_add_permission(self, request, obj=None):
         return False
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+        return qs.select_related('service')
 
 
 @admin.register(Transaction)
@@ -31,6 +35,8 @@ class TransactionAdmin(SimpleHistoryAdmin, BaseModelAdmin, ExportActionModelAdmi
     inlines = [TransactionServiceInline]
     resource_classes = (TransactionResource,)
     list_filter_submit = True
+    list_select_related = ('patient', 'staff', 'organization')
+    list_per_page = 25
 
     export_form_class = ExportForm
 
@@ -73,7 +79,7 @@ class TransactionAdmin(SimpleHistoryAdmin, BaseModelAdmin, ExportActionModelAdmi
         super().save_model(request, obj, form, change)
 
     def get_queryset(self, request):
-        qs = super().get_queryset(request)
+        qs = super().get_queryset(request).select_related('patient', 'staff', 'organization')
         if request.user.is_superuser:
             return qs
         if request.user.role == ROLE_ADMIN:

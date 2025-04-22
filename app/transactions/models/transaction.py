@@ -30,7 +30,7 @@ class Transaction(models.Model):
     )
 
     def __str__(self):
-        return f"Транзакция {self.id} - {self.patient.first_name} {self.patient.last_name}"
+        return f"Транзакция {self.id}"
 
     class Meta:
         verbose_name = "Транзакция"

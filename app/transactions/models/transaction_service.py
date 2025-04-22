@@ -9,7 +9,7 @@ class TransactionService(models.Model):
     service = models.ForeignKey('services.Service', on_delete=models.PROTECT, verbose_name="Услуга")
 
     def __str__(self):
-        return f"Услуга {self.service.name} для транзакции {self.transaction.id}"
+        return f"Услуга ID={self.service_id} для транзакции #{self.transaction_id}"
 
     class Meta:
         verbose_name = "Услуга в транзакции"
