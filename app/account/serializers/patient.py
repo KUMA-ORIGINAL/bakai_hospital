@@ -26,6 +26,7 @@ class PatientCreateSerializer(serializers.ModelSerializer):
             'first_name',
             'last_name',
             'patronymic',
+            'phone_number',
             'inn',
             'date_of_birth',
             'gender',
