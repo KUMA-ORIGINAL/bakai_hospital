@@ -17,11 +17,13 @@ class TransactionCreateSerializer(serializers.ModelSerializer):
             'patient',
             'staff',
             'services',
+            'phone_number',
             'payment_url'
         ]
         extra_kwargs = {
             'patient': {'write_only': True},
             'staff': {'write_only': True},
+            'phone_number': {'write_only': True},
         }
 
     def create(self, validated_data):
