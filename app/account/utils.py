@@ -39,7 +39,7 @@ def send_to_openai(front_image_base64, back_image_base64):
                     "2. Вернуть ТОЛЬКО строго JSON без комментариев.\n"
                     "\n"
                     "Извлеки следующие поля:\n"
-                    "- inn: ИНН (если нет — пустая строка \"\")\n"
+                    "- inn: Персональный номер/personal number (если нет — пустая строка \"\")\n"
                     "- first_name: Имя (только кириллица, заглавными буквами)\n"
                     "- last_name: Фамилия (только кириллица, заглавными буквами)\n"
                     "- patronymic: Отчество (если нет — пустая строка \"\")\n"
@@ -84,7 +84,7 @@ def send_to_openai(front_image_base64, back_image_base64):
             # Нормализуем ФИО
             for field in ["first_name", "last_name", "patronymic"]:
                 if extracted_data.get(field):
-                    extracted_data[field] = extracted_data[field].upper()
+                    extracted_data[field] = extracted_data[field].capitalize()
 
             # Нормализуем пол
             gender = extracted_data.get("gender", "").upper()
