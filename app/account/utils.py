@@ -10,24 +10,49 @@ logger = logging.getLogger(__name__)
 
 
 def normalize_date(date_string):
+    """
+    Нормализует дату в формат YYYY-MM-DD.
+    """
     try:
+        # Если дата в формате дд.мм.гггг
         return datetime.strptime(date_string, "%d.%m.%Y").strftime("%Y-%m-%d")
     except (ValueError, TypeError):
         return date_string
 
 
 def send_to_openai(front_image_base64, back_image_base64):
+    """
+    Отправка изображений паспорта в OpenAI для извлечения данных.
+    """
     try:
         logger.info("Инициализация клиента OpenAI")
         client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
 
+        # Новый, усиленный Prompt
         messages = [
             {
                 "role": "system",
                 "content": (
                     "Ты профессиональный OCR-специалист.\n"
-                    "Твоя задача: точно анализировать изображения паспорта (переднюю и заднюю стороны) "
-                    "и вернуть только нужные данные в формате чистого JSON без каких-либо пояснений."
+                    "Твоя задача:\n"
+                    "1. Проанализировать фотографии паспорта (переднюю и заднюю стороны).\n"
+                    "2. Вернуть ТОЛЬКО строго JSON без комментариев.\n"
+                    "\n"
+                    "Извлеки следующие поля:\n"
+                    "- inn: ИНН (если нет — пустая строка \"\")\n"
+                    "- first_name: Имя (только кириллица, заглавными буквами)\n"
+                    "- last_name: Фамилия (только кириллица, заглавными буквами)\n"
+                    "- patronymic: Отчество (если нет — пустая строка \"\")\n"
+                    "- gender: 'М' для мужчин, 'Ж' для женщин\n"
+                    "- date_of_birth: Дата рождения в формате 'YYYY-MM-DD'\n"
+                    "- passport_number: Номер паспорта или ID-карты\n"
+                    "\n"
+                    "Требования:\n"
+                    "- Использовать только кириллицу.\n"
+                    "- Все ФИО — заглавными буквами (например: «ИВАНОВ»).\n"
+                    "- Строго форматировать дату.\n"
+                    "- Если данных нет — пустая строка.\n"
+                    "- Никаких лишних текстов и пояснений."
                 )
             },
             {
@@ -36,23 +61,7 @@ def send_to_openai(front_image_base64, back_image_base64):
                     {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{front_image_base64}"}},
                     {"type": "image_url", "image_url": {"url": f"data:image/jpeg;base64,{back_image_base64}"}},
                     {"type": "text",
-                     "text": (
-                         "Распознай текст на паспорте.\n"
-                         "Извлеки строго следующие данные:\n"
-                         "- inn — ИНН (если есть, иначе \"\")\n"
-                         "- first_name — Имя (предпочтительно кириллицей, если доступно)\n"
-                         "- last_name — Фамилия (предпочтительно кириллицей, если доступно)\n"
-                         "- patronymic — Отчество (если есть, иначе \"\")\n"
-                         "- gender — Пол (М или Ж)\n"
-                         "- date_of_birth — Дата рождения в формате YYYY-MM-DD\n"
-                         "- passport_number — Номер паспорта или ID-карты\n\n"
-                         "Важно:\n"
-                         "- Используй только кириллицу.\n"
-                         "- Формат даты строго YYYY-MM-DD.\n"
-                         "- Пол указывай одной буквой: 'М' (мужской) или 'Ж' (женский).\n"
-                         "- Если данных нет, оставляй пустую строку \"\".\n"
-                         "- Никаких лишних слов, описаний или пояснений — только JSON, ровно по шаблону."
-                     )}
+                     "text": "Распознай текст и верни данные в формате JSON."}
                 ]
             }
         ]
@@ -66,29 +75,32 @@ def send_to_openai(front_image_base64, back_image_base64):
         result_text = response.choices[0].message.content.strip()
         logger.info(f"Ответ от OpenAI: {result_text}")
 
-        # Удаляем возможные текстовые обёртки вокруг JSON
-        result_text = re.sub(r"^```json\n|\n```$", "", result_text).strip()
+        # Удаляем лишние обертки вокруг JSON
+        result_text = re.sub(r"^```json\s*|\s*```$", "", result_text.strip())
 
-        # Проверяем, является ли ответ валидным JSON
         if result_text.startswith("{") and result_text.endswith("}"):
             extracted_data = json.loads(result_text)
 
-            extracted_data["first_name"] = extracted_data["first_name"].capitalize()
-            extracted_data["last_name"] = extracted_data["last_name"].capitalize()
-            extracted_data["patronymic"] = extracted_data["patronymic"].capitalize()
+            # Нормализуем ФИО
+            for field in ["first_name", "last_name", "patronymic"]:
+                if extracted_data.get(field):
+                    extracted_data[field] = extracted_data[field].upper()
 
-            if extracted_data.get("gender") in ["М", "Э"]:
+            # Нормализуем пол
+            gender = extracted_data.get("gender", "").upper()
+            if gender in ["М", "Э"]:
                 extracted_data["gender"] = "male"
-            elif extracted_data.get("gender") in ["Ж", "А"]:
+            elif gender in ["Ж", "А"]:
                 extracted_data["gender"] = "female"
             else:
                 extracted_data["gender"] = ""
 
-            # extracted_data["date_of_birth"] = normalize_date(extracted_data.get("date_of_birth", ""))
+            # Нормализуем дату рождения
+            extracted_data["date_of_birth"] = normalize_date(extracted_data.get("date_of_birth", ""))
 
             return extracted_data
 
-        return {"error": "OpenAI не вернул JSON. Ответ: " + result_text}
+        return {"error": f"OpenAI не вернул JSON. Ответ: {result_text}"}
 
     except json.JSONDecodeError as e:
         logger.error(f"Ошибка декодирования JSON: {str(e)}")
