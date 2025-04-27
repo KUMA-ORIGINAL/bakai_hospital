@@ -6,7 +6,7 @@ from unfold.decorators import action
 from account.models import ROLE_ADMIN
 from ..models import Room, Building
 from common.admin import BaseModelAdmin
-from ..services import create_pdf_with_qr_only
+from ..services import process_pdf
 
 
 @admin.register(Room)
@@ -23,21 +23,17 @@ class RoomAdmin(BaseModelAdmin):
         url_path="download_qr_actions_detail-url",
     )
     def download_qr_actions_detail(self, request, object_id):
-        qr_url = f"https://hospital.operator.kg/rooms/{object_id}"
+        qr_url = f"https://hospital.operator.kg/rooms/{object_id}/"
 
         room = get_object_or_404(Room, id=object_id)
 
-        organization = room.department.organization.name  # или room.organization, если просто строка
-        department = room.department.name  # или room.department
-        building = room.building  # строка типа "Корпус A"
+        text_department = room.department.name  # или room.department
         room_number = room.room_number  # или room.room_number
 
-        output_pdf_stream = create_pdf_with_qr_only(
+        output_pdf_stream = process_pdf(
             qr_url=qr_url,
-            organization=organization,
-            department=department,
-            building=building,
-            room=room_number
+            text_department=text_department,
+            text_room=f"Кабинет №{room_number}",
         )
         response = HttpResponse(output_pdf_stream, content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename="qr_code_room_id_{object_id}.pdf"'

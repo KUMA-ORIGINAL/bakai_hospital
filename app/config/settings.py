@@ -62,6 +62,7 @@ INSTALLED_APPS = [
     "import_export",
     "simple_history",
     'channels',
+    'cachalot',
 
     'account',
     'services',
@@ -192,6 +193,30 @@ AUTH_USER_MODEL = 'account.User'
 if DEBUG:
     INSTALLED_APPS += ['silk']
     MIDDLEWARE.insert(0, 'silk.middleware.SilkyMiddleware')
+
+CACHES = {
+    'default': {
+        'BACKEND': 'django_redis.cache.RedisCache',
+        'LOCATION': 'redis://redis:6379/1',
+        'OPTIONS': {
+            'CLIENT_CLASS': 'django_redis.client.DefaultClient',
+        }
+    }
+}
+
+CACHALOT_ENABLED = True
+CACHALOT_TIMEOUT = 60 * 60
+
+CACHALOT_ONLY_CACHABLE_TABLES = {
+    'organizations_organization',
+    'organizations_building',
+    'organizations_department',
+    'organizations_room',
+    'services_service',
+    'services_payoutaccount',
+    'account_user',
+    'auth_group',
+}
 
 CHANNEL_LAYERS = {
     'default': {
