@@ -18,7 +18,7 @@ def generate_payment_link(transaction):
         "amount": str(transaction.total_price),
         "transaction_id": str(transaction.id),
         "comment": f"Оплата заказа #{transaction.id} hospital",
-        "redirect_url": f"https://hospital.operator.kg/transactions/{transaction.id}/",
+        "redirect_url": f"https://ug.imed.kg/transactions/{transaction.id}/",
         'token': payout_account.payout_token,
     }
 

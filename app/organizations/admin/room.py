@@ -23,7 +23,7 @@ class RoomAdmin(BaseModelAdmin):
         url_path="download_qr_actions_detail-url",
     )
     def download_qr_actions_detail(self, request, object_id):
-        qr_url = f"https://hospital.operator.kg/rooms/{object_id}/"
+        qr_url = request.build_absolute_uri(f"/rooms/{object_id}/")
 
         room = get_object_or_404(Room, id=object_id)
 
