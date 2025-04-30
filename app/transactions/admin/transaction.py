@@ -53,9 +53,10 @@ class TransactionAdmin(SimpleHistoryAdmin, BaseModelAdmin, ExportActionModelAdmi
             "id", "patient", "staff", "total_price", "pay_method", "status", "created_at", "organization", 'detail_link')
         if request.user.is_superuser:
             pass
-        elif request.user.role in (ROLE_ADMIN, ROLE_DOCTOR, ROLE_ACCOUNTANT):
-            list_display = (
-                "patient", "staff", "total_price", "pay_method", "status", "created_at", 'detail_link')
+        elif request.user.role in (ROLE_ADMIN,):
+            list_display = ("patient", "staff", "total_price", "pay_method", "status", "created_at", 'detail_link')
+        elif request.user.role in (ROLE_DOCTOR, ROLE_ACCOUNTANT):
+            list_display = ("patient", "staff", "total_price", "pay_method", "status", "created_at", 'detail_link_view')
         return list_display
 
     def get_fieldsets(self, request, obj=None):

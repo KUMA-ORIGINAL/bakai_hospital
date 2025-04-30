@@ -25,8 +25,9 @@ class UserAdmin(UserAdmin, BaseModelAdmin):
     add_form = UserCreationForm
 
     list_display_links = ('id', 'email')
-    search_fields = ('email', 'first_name', 'last_name', 'role')  # Поля для поиска
-    ordering = ('-date_joined',)  # Сортировка по дате присоединения
+    search_fields = ('email', 'first_name', 'last_name', 'role')
+    ordering = ('-date_joined',)
+    autocomplete_fields = ('groups',)
     list_per_page = 20
 
     add_fieldsets = (
@@ -61,7 +62,7 @@ class UserAdmin(UserAdmin, BaseModelAdmin):
                 "fields": ("email", "password"),
             }),
             ("Права доступа", {
-                "fields": ("is_staff", "is_active", "is_superuser", "groups", "user_permissions"),
+                "fields": ("is_staff", "is_active", "is_superuser", "groups",),
             }),
             ("Даты", {
                 "fields": ("last_login", "date_joined"),
@@ -95,6 +96,7 @@ class UserAdmin(UserAdmin, BaseModelAdmin):
     def save_model(self, request, obj, form, change):
         if request.user.role == ROLE_ADMIN:
             obj.organization = request.user.organization
+            obj.is_staff = True
         super().save_model(request, obj, form, change)
 
     def get_queryset(self, request):

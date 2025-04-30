@@ -2,7 +2,7 @@ from django.contrib import admin
 
 from common.admin import BaseModelAdmin
 from transactions.models import Transaction
-from ..models import Patient, ROLE_ADMIN, ROLE_DOCTOR
+from ..models import Patient, ROLE_ADMIN, ROLE_DOCTOR, ROLE_ACCOUNTANT
 
 
 class TransactionInline(admin.TabularInline):
@@ -39,9 +39,14 @@ class PatientAdmin(BaseModelAdmin):
         )
         if request.user.is_superuser:
             pass
-        elif request.user.role in (ROLE_ADMIN, ROLE_DOCTOR):
+        elif request.user.role in (ROLE_ADMIN,):
             list_display = (
                 'first_name', 'last_name', 'patronymic', 'date_of_birth', 'gender', 'inn', 'phone_number', 'detail_link'
+            )
+        elif request.user.role in (ROLE_DOCTOR, ROLE_ACCOUNTANT):
+            list_display = (
+                'first_name', 'last_name', 'patronymic', 'date_of_birth', 'gender', 'inn', 'phone_number',
+                'detail_link_view'
             )
         return list_display
 

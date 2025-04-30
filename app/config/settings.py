@@ -421,6 +421,7 @@ UNFOLD = {
                         "title": _("Счета для выплат"),
                         "icon": "payments",
                         "link": reverse_lazy("admin:services_payoutaccount_changelist"),
+                        'permission': 'account.admin_permissions.permission_callback_for_doctor_and_accountant',
                     },
                 ],
             },
