@@ -19,3 +19,9 @@ def permission_callback_for_accountant(request):
     if request.user.role == ROLE_ACCOUNTANT:
         return False
     return True
+
+
+def permission_callback_for_doctor(request):
+    if request.user.role == ROLE_DOCTOR:
+        return False
+    return True

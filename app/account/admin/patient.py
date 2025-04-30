@@ -28,7 +28,7 @@ class PatientAdmin(BaseModelAdmin):
         list_filter = ('gender', 'organization', 'created_at')
         if request.user.is_superuser:
             pass
-        elif request.user.role in (ROLE_ADMIN, ROLE_DOCTOR):
+        elif request.user.role in (ROLE_ADMIN, ROLE_DOCTOR, ROLE_ACCOUNTANT):
             list_filter = ('gender', 'created_at')
         return list_filter
 
@@ -63,7 +63,7 @@ class PatientAdmin(BaseModelAdmin):
         )
         if request.user.is_superuser:
             pass
-        elif request.user.role in (ROLE_ADMIN, ROLE_DOCTOR):
+        elif request.user.role in (ROLE_ADMIN, ROLE_DOCTOR, ROLE_ACCOUNTANT):
             fieldsets[1][1]['fields'] = ('photo', 'comment', 'passport_front_photo', 'passport_back_photo', 'created_at')
         return fieldsets
 
@@ -76,5 +76,5 @@ class PatientAdmin(BaseModelAdmin):
         qs = super().get_queryset(request)
         if request.user.is_superuser:
             return qs
-        elif request.user.role in (ROLE_ADMIN, ROLE_DOCTOR):
+        elif request.user.role in (ROLE_ADMIN, ROLE_DOCTOR, ROLE_ACCOUNTANT):
             return qs.filter(organization=request.user.organization)

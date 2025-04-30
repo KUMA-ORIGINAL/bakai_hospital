@@ -1,5 +1,5 @@
 from django.contrib import admin
-from account.models import ROLE_ADMIN
+from account.models import ROLE_ADMIN, ROLE_ACCOUNTANT
 from ..models import PayoutAccount
 from common.admin import BaseModelAdmin
 
@@ -15,7 +15,7 @@ class PayoutAccountAdmin(BaseModelAdmin):
         list_filter = ("provider", "organization")
         if request.user.is_superuser:
             pass
-        elif request.user.role == ROLE_ADMIN:
+        elif request.user.role in (ROLE_ADMIN, ROLE_ACCOUNTANT):
             list_filter = ("provider",)
         return list_filter
 
@@ -25,13 +25,15 @@ class PayoutAccountAdmin(BaseModelAdmin):
             pass
         elif request.user.role == ROLE_ADMIN:
             list_display = ("name", "provider", 'detail_link')
+        elif request.user.role == ROLE_ACCOUNTANT:
+            list_display = ("name", "provider", 'detail_link_view')
         return list_display
 
     def get_exclude(self, request, obj=None):
         exclude = ()
         if request.user.is_superuser:
             pass
-        elif request.user.role == ROLE_ADMIN:
+        elif request.user.role in (ROLE_ADMIN, ROLE_ACCOUNTANT):
             exclude = ("organization",)
         return exclude
 
@@ -44,5 +46,6 @@ class PayoutAccountAdmin(BaseModelAdmin):
         qs = super().get_queryset(request)
         if request.user.is_superuser:
             return qs
-        elif request.user.role == ROLE_ADMIN:
+        elif request.user.role in (ROLE_ADMIN, ROLE_ACCOUNTANT):
             return qs.filter(organization=request.user.organization)
+        return qs

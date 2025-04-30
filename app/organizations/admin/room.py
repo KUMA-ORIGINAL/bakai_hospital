@@ -3,7 +3,7 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from unfold.decorators import action
 
-from account.models import ROLE_ADMIN
+from account.models import ROLE_ADMIN, ROLE_ACCOUNTANT
 from ..models import Room, Building
 from common.admin import BaseModelAdmin
 from ..services import process_pdf
@@ -53,11 +53,14 @@ class RoomAdmin(BaseModelAdmin):
             pass
         elif request.user.role == ROLE_ADMIN:
             list_display = ("room_number", "floor", "building", 'detail_link')
+        elif request.user.role == ROLE_ACCOUNTANT:
+            list_display = ("room_number", "floor", "building", 'detail_link_view')
         return list_display
 
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         if request.user.is_superuser:
             return qs
-        elif request.user.role == ROLE_ADMIN:
+        elif request.user.role in (ROLE_ADMIN, ROLE_ACCOUNTANT):
             return qs.filter(building__organization=request.user.organization)
+        return qs
