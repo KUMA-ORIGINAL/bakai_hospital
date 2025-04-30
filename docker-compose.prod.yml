@@ -20,7 +20,7 @@ services:
         condition: service_healthy
 
   database:
-    image: postgres:16
+    image: postgres:16.8
     env_file: .env.prod
     restart: always
     volumes:
