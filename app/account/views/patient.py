@@ -25,9 +25,9 @@ class PatientViewSet(viewsets.GenericViewSet,
                      mixins.CreateModelMixin,):
 
     def get_serializer_class(self):
-        if self.action == 'list':
-            return PatientSerializer
-        return PatientCreateSerializer
+        if self.action == 'create':
+            return PatientCreateSerializer
+        return PatientSerializer
 
     def get_queryset(self):
         queryset = Patient.objects.all()
