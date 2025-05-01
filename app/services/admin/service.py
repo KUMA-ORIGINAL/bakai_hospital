@@ -1,7 +1,7 @@
 from django.contrib import admin
 from modeltranslation.admin import TabbedTranslationAdmin
 
-from account.models import ROLE_ADMIN, ROLE_ACCOUNTANT
+from account.models import ROLE_ADMIN, ROLE_ACCOUNTANT, ROLE_DOCTOR
 from ..models import Service
 from common.admin import BaseModelAdmin
 
@@ -16,7 +16,7 @@ class ServiceAdmin(BaseModelAdmin, TabbedTranslationAdmin):
         list_filter = ("organization",)
         if request.user.is_superuser:
             pass
-        elif request.user.role in (ROLE_ADMIN, ROLE_ACCOUNTANT):
+        elif request.user.role in (ROLE_ADMIN, ROLE_ACCOUNTANT, ROLE_DOCTOR):
             list_filter = ()
         return list_filter
 
@@ -26,7 +26,7 @@ class ServiceAdmin(BaseModelAdmin, TabbedTranslationAdmin):
             pass
         elif request.user.role == ROLE_ADMIN:
             list_display = ("name", "price", 'category', 'detail_link')
-        elif request.user.role == ROLE_ACCOUNTANT:
+        elif request.user.role in (ROLE_ACCOUNTANT, ROLE_DOCTOR):
             list_display = ("name", "price", 'category', 'detail_link_view')
         return list_display
 
@@ -34,7 +34,7 @@ class ServiceAdmin(BaseModelAdmin, TabbedTranslationAdmin):
         exclude = ()
         if request.user.is_superuser:
             pass
-        elif request.user.role in (ROLE_ADMIN, ROLE_ACCOUNTANT):
+        elif request.user.role in (ROLE_ADMIN, ROLE_ACCOUNTANT, ROLE_DOCTOR):
             exclude = ('organization',)
         return exclude
 
@@ -47,6 +47,6 @@ class ServiceAdmin(BaseModelAdmin, TabbedTranslationAdmin):
         qs = super().get_queryset(request)
         if request.user.is_superuser:
             return qs
-        elif request.user.role in(ROLE_ADMIN, ROLE_ACCOUNTANT):
+        elif request.user.role in(ROLE_ADMIN, ROLE_ACCOUNTANT, ROLE_DOCTOR):
             return qs.filter(organization=request.user.organization)
         return qs

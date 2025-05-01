@@ -15,7 +15,7 @@ def normalize_date(date_string):
     """
     try:
         # Если дата в формате дд.мм.гггг
-        return datetime.strptime(date_string, "%d.%m.%Y").strftime("%Y-%m-%d")
+        return datetime.strptime(date_string, "%Y-%m-%d").strftime("%d.%m.%Y")
     except (ValueError, TypeError):
         return date_string
 
@@ -44,7 +44,7 @@ def send_to_openai(front_image_base64, back_image_base64):
                     "- last_name: Фамилия (только кириллица, заглавными буквами)\n"
                     "- patronymic: Отчество (если нет — пустая строка \"\")\n"
                     "- gender: 'М' для мужчин, 'Ж' для женщин\n"
-                    "- date_of_birth: Дата рождения в формате 'YYYY-MM-DD'\n"
+                    "- date_of_birth: Дата рождения в формате 'MM-DD-YYYY'\n"
                     "- passport_number: Номер паспорта или ID-карты\n"
                     "\n"
                     "Требования:\n"

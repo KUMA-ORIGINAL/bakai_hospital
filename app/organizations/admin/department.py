@@ -8,7 +8,7 @@ from common.admin import BaseModelAdmin
 
 @admin.register(Department)
 class DepartmentAdmin(BaseModelAdmin, TabbedTranslationAdmin):
-    search_fields = ("name", "organization")
+    search_fields = ("name",)
     ordering = ("name",)
 
     def get_list_filter(self, request):
