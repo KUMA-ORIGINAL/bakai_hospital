@@ -45,11 +45,15 @@ class TransactionResource(resources.ModelResource):
     services_summary = fields.Field(
         column_name=_("Состав чека"),
     )
+    department = fields.Field(
+        attribute='staff__room__department__name',
+        column_name='Отдел'
+    )
 
     class Meta:
         model = Transaction
         fields = ('id', 'patient', 'staff', 'total_price', 'services_summary', 'comment', 'phone_number',
-                  'pay_method', 'status', 'created_at', 'organization')
+                  'pay_method', 'status', 'created_at', 'department', 'organization')
 
     def dehydrate_created_at(self, obj):
         return obj.created_at.strftime('%Y-%m-%d %H:%M:%S')
