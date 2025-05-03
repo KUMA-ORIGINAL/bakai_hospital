@@ -1,9 +1,12 @@
 from django.contrib import admin
 from django.contrib.auth.admin import UserAdmin, GroupAdmin
+from django.contrib.auth.hashers import UNUSABLE_PASSWORD_PREFIX
 from django.contrib.auth.models import Group
+from django.utils.translation import gettext_lazy as _
 
 from unfold.admin import ModelAdmin as UnfoldModelAdmin
-from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationForm
+from unfold.forms import AdminPasswordChangeForm, UserChangeForm as BaseUserChangeForm, UserCreationForm, \
+    UnfoldReadOnlyPasswordHashWidget
 
 from common.admin import BaseModelAdmin
 from organizations.models import Room
@@ -15,6 +18,37 @@ admin.site.unregister(Group)
 @admin.register(Group)
 class GroupAdmin(GroupAdmin, UnfoldModelAdmin):
     pass
+
+
+class MaskedPasswordWidget(UnfoldReadOnlyPasswordHashWidget):
+    def get_context(self, name, value, attrs):
+        context = super().get_context(name, value, attrs)
+
+        usable_password = value and not value.startswith(UNUSABLE_PASSWORD_PREFIX)
+
+        if usable_password:
+            context["summary"] = [
+                {"label": "*****************************************************************************************"},
+            ]
+        else:
+            context["summary"] = [
+                {"label": _("No password set.")},
+            ]
+
+        context["button_label"] = (
+            _("Reset password") if usable_password else _("Set password")
+        )
+        return context
+
+
+class UserChangeForm(BaseUserChangeForm):
+    def __init__(
+        self,
+        *args,
+        **kwargs,
+    ) -> None:
+        super().__init__(*args, **kwargs)
+        self.fields["password"].widget = MaskedPasswordWidget()
 
 
 @admin.register(User)
