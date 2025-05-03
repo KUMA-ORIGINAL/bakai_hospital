@@ -13,4 +13,3 @@ class RoomViewSet(viewsets.GenericViewSet,
     queryset = Room.objects.select_related('building', 'department') \
         .prefetch_related('services', 'doctors')
     serializer_class = RoomSerializer
-

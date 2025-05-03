@@ -402,7 +402,7 @@ UNFOLD = {
                 "items": [
                     {
                         "title": _("Услуги"),
-                        "icon": "construction",
+                        "icon": "medical_services",
                         "link": reverse_lazy("admin:services_service_changelist"),
                     },
                     # {
@@ -442,7 +442,7 @@ UNFOLD = {
                 "items": [
                     {
                         "title": _("Пациенты"),
-                        "icon": "person",
+                        "icon": "patient_list",
                         "link": reverse_lazy("admin:account_patient_changelist"),
                     },
                 ],
