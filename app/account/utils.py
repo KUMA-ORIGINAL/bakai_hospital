@@ -9,17 +9,6 @@ from django.conf import settings
 logger = logging.getLogger(__name__)
 
 
-def normalize_date(date_string):
-    """
-    Нормализует дату в формат YYYY-MM-DD.
-    """
-    try:
-        # Если дата в формате дд.мм.гггг
-        return datetime.strptime(date_string, "%Y-%m-%d").strftime("%d.%m.%Y")
-    except (ValueError, TypeError):
-        return date_string
-
-
 def send_to_openai(front_image_base64, back_image_base64):
     """
     Отправка изображений паспорта в OpenAI для извлечения данных.
@@ -44,7 +33,7 @@ def send_to_openai(front_image_base64, back_image_base64):
                     "- last_name: Фамилия (только кириллица, заглавными буквами)\n"
                     "- patronymic: Отчество (если нет — пустая строка \"\")\n"
                     "- gender: 'М' для мужчин, 'Ж' для женщин\n"
-                    "- date_of_birth: Дата рождения в формате 'MM-DD-YYYY'\n"
+                    "- date_of_birth: Дата рождения в формате 'DD-MM-YYYY'\n"
                     "- passport_number: Номер паспорта или ID-карты\n"
                     "\n"
                     "Требования:\n"
@@ -75,18 +64,15 @@ def send_to_openai(front_image_base64, back_image_base64):
         result_text = response.choices[0].message.content.strip()
         logger.info(f"Ответ от OpenAI: {result_text}")
 
-        # Удаляем лишние обертки вокруг JSON
         result_text = re.sub(r"^```json\s*|\s*```$", "", result_text.strip())
 
         if result_text.startswith("{") and result_text.endswith("}"):
             extracted_data = json.loads(result_text)
 
-            # Нормализуем ФИО
             for field in ["first_name", "last_name", "patronymic"]:
                 if extracted_data.get(field):
                     extracted_data[field] = extracted_data[field].capitalize()
 
-            # Нормализуем пол
             gender = extracted_data.get("gender", "").upper()
             if gender in ["М", "Э"]:
                 extracted_data["gender"] = "male"
@@ -94,9 +80,6 @@ def send_to_openai(front_image_base64, back_image_base64):
                 extracted_data["gender"] = "female"
             else:
                 extracted_data["gender"] = ""
-
-            # Нормализуем дату рождения
-            extracted_data["date_of_birth"] = normalize_date(extracted_data.get("date_of_birth", ""))
 
             return extracted_data
 

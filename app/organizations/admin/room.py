@@ -3,10 +3,10 @@ from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from unfold.decorators import action
 
-from account.models import ROLE_ADMIN, ROLE_ACCOUNTANT
+from account.models import ROLE_ADMIN, ROLE_ACCOUNTANT, ROLE_DOCTOR
 from ..models import Room, Building
 from common.admin import BaseModelAdmin
-from ..services import process_pdf
+from ..services import generate_qr_pdf
 
 
 @admin.register(Room)
@@ -30,10 +30,15 @@ class RoomAdmin(BaseModelAdmin):
         text_department = room.department.name  # или room.department
         room_number = room.room_number  # или room.room_number
 
-        output_pdf_stream = process_pdf(
+        output_pdf_stream = generate_qr_pdf(
             qr_url=qr_url,
             text_department=text_department,
             text_room=f"Кабинет №{room_number}",
+            site_text="ug.imed.kg",
+            scan_text_ru="Отсканируйте камерой телефона",
+            pay_text_ru="Оплачивайте через:",
+            scan_text_kg="Камераңыз менен сканердеңиз",
+            pay_text_kg="Төлөңүз аркылуу:"
         )
         response = HttpResponse(output_pdf_stream, content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename="qr_code_room_id_{object_id}.pdf"'
@@ -53,7 +58,7 @@ class RoomAdmin(BaseModelAdmin):
             pass
         elif request.user.role == ROLE_ADMIN:
             list_display = ("room_number", "floor", "building", 'detail_link')
-        elif request.user.role == ROLE_ACCOUNTANT:
+        elif request.user.role in (ROLE_ACCOUNTANT, ROLE_DOCTOR):
             list_display = ("room_number", "floor", "building", 'detail_link_view')
         return list_display
 
@@ -61,6 +66,6 @@ class RoomAdmin(BaseModelAdmin):
         qs = super().get_queryset(request)
         if request.user.is_superuser:
             return qs
-        elif request.user.role in (ROLE_ADMIN, ROLE_ACCOUNTANT):
+        elif request.user.role in (ROLE_ADMIN, ROLE_ACCOUNTANT, ROLE_DOCTOR):
             return qs.filter(building__organization=request.user.organization)
         return qs

@@ -7,7 +7,7 @@ from unfold.forms import AdminPasswordChangeForm, UserChangeForm, UserCreationFo
 
 from common.admin import BaseModelAdmin
 from organizations.models import Room
-from ..models import User, ROLE_ADMIN
+from ..models import User, ROLE_ADMIN, ROLE_ACCOUNTANT
 
 admin.site.unregister(Group)
 
@@ -50,7 +50,7 @@ class UserAdmin(UserAdmin, BaseModelAdmin):
         if request.user.is_superuser:
             pass
         elif request.user.role == ROLE_ADMIN:
-            list_display = ('email', 'first_name', 'last_name', 'role', 'position', 'specialization', 'status')
+            list_display = ('email', 'first_name', 'last_name', 'role', 'position', 'specialization', 'status', 'detail_link')
         return list_display
 
     def get_fieldsets(self, request, obj=None):
@@ -78,7 +78,7 @@ class UserAdmin(UserAdmin, BaseModelAdmin):
             }),
         ]
 
-        if not request.user.is_superuser and request.user.role == ROLE_ADMIN:
+        if not request.user.is_superuser and request.user.role in (ROLE_ADMIN, ROLE_ACCOUNTANT):
             fieldsets = [fs for fs in fieldsets if fs[0] != "Права доступа"]
             for fs in fieldsets:
                 if fs[0] == "Организация":
@@ -103,5 +103,6 @@ class UserAdmin(UserAdmin, BaseModelAdmin):
         qs = super().get_queryset(request)
         if request.user.is_superuser:
             return qs
-        elif request.user.role == ROLE_ADMIN:
+        elif request.user.role in (ROLE_ADMIN, ROLE_ACCOUNTANT):
             return qs.filter(organization=request.user.organization)
+        return qs

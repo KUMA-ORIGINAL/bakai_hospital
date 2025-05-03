@@ -30,12 +30,6 @@ class Patient(models.Model):
         choices=GENDER_CHOICES,
         verbose_name='Пол'
     )
-    photo = models.CharField(
-        max_length=255,
-        blank=True,
-        null=True,
-        verbose_name='Фото пациента'
-    )
     comment = models.TextField(
         blank=True,
         null=True,
@@ -48,7 +42,7 @@ class Patient(models.Model):
     )
     phone_number = models.CharField(
         max_length=20,
-        verbose_name='Телефонный номер'
+        verbose_name='Номер телефона'
     )
     passport_front_photo = models.ImageField(
         upload_to='patients/passport_photos/%Y/%m/%d/',

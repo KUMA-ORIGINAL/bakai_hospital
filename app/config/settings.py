@@ -40,7 +40,9 @@ else:
 
 INSTALLED_APPS = [
     'daphne',
+
     'modeltranslation',
+
     'unfold',
     "unfold.contrib.filters",
     "unfold.contrib.forms",

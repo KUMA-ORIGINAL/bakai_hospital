@@ -58,13 +58,13 @@ class PatientAdmin(BaseModelAdmin):
                     'passport_number')
             }),
             ('Дополнительно', {
-                'fields': ('photo', 'comment', 'passport_front_photo', 'passport_back_photo', 'organization', 'created_at'),
+                'fields': ('comment', 'passport_front_photo', 'passport_back_photo', 'organization', 'created_at'),
             }),
         )
         if request.user.is_superuser:
             pass
         elif request.user.role in (ROLE_ADMIN, ROLE_DOCTOR, ROLE_ACCOUNTANT):
-            fieldsets[1][1]['fields'] = ('photo', 'comment', 'passport_front_photo', 'passport_back_photo', 'created_at')
+            fieldsets[1][1]['fields'] = ('comment', 'passport_front_photo', 'passport_back_photo', 'created_at')
         return fieldsets
 
     def save_model(self, request, obj, form, change):

@@ -1,7 +1,7 @@
 from django.contrib import admin
 from modeltranslation.admin import TabbedTranslationAdmin
 
-from account.models import ROLE_ADMIN
+from account.models import ROLE_ADMIN, ROLE_ACCOUNTANT, ROLE_DOCTOR
 from ..models import Department
 from common.admin import BaseModelAdmin
 
@@ -44,5 +44,5 @@ class DepartmentAdmin(BaseModelAdmin, TabbedTranslationAdmin):
         qs = super().get_queryset(request)
         if request.user.is_superuser:
             return qs
-        elif request.user.role == ROLE_ADMIN:
+        elif request.user.role in (ROLE_ADMIN, ROLE_ACCOUNTANT, ROLE_DOCTOR):
             return qs.filter(organization=request.user.organization)
