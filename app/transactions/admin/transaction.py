@@ -162,10 +162,6 @@ class TransactionAdmin(SimpleHistoryAdmin, BaseModelAdmin, ExportActionModelAdmi
                 "staff",
                 "organization",
             )
-            .prefetch_related(
-                "staff__rooms",  # ✅ M2M
-                "staff__rooms__department",  # ✅ вложенный prefetch
-            )
         )
 
     def has_change_permission(self, request, obj=None):

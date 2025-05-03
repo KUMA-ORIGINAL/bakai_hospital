@@ -37,6 +37,6 @@ class TransactionResource(resources.ModelResource):
 
     def dehydrate_department(self, obj):
         try:
-            return obj.staff.rooms.department.name
+            return obj.service.rooms.department.name
         except AttributeError:
             return ""
