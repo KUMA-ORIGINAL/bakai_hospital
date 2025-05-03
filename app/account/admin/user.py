@@ -108,24 +108,13 @@ class UserAdmin(UserAdmin, BaseModelAdmin):
                 ),
             }),
             ("Организация", {
-                "fields": ("organization", "room"),
+                "fields": ("organization",),
             }),
         ]
 
         if not request.user.is_superuser and request.user.role in (ROLE_ADMIN, ROLE_ACCOUNTANT):
-            fieldsets = [fs for fs in fieldsets if fs[0] != "Права доступа"]
-            for fs in fieldsets:
-                if fs[0] == "Организация":
-                    fs[1]["fields"] = ("room",)
-                    break
+            fieldsets = [fs for fs in fieldsets if fs[0] != "Права доступа" or fs[0] != 'Организация']
         return fieldsets
-
-    def formfield_for_foreignkey(self, db_field, request, **kwargs):
-        if request.user.role == ROLE_ADMIN:
-            organization = request.user.organization
-            if db_field.name == "room":
-                kwargs["queryset"] = Room.objects.filter(building__organization=organization)
-        return super().formfield_for_foreignkey(db_field, request, **kwargs)
 
     def save_model(self, request, obj, form, change):
         if request.user.role == ROLE_ADMIN:

@@ -1,11 +1,11 @@
 from django.contrib import admin
-from django.db.models import Prefetch, Q
+from django.db.models import Prefetch
 from django.utils.html import format_html
 
 from import_export.admin import ExportActionModelAdmin
 from simple_history.admin import SimpleHistoryAdmin
 from unfold.admin import TabularInline
-from unfold.contrib.filters.admin import RangeDateTimeFilter, RelatedDropdownFilter, TextFilter
+from unfold.contrib.filters.admin import RangeDateTimeFilter, RelatedDropdownFilter
 from unfold.contrib.import_export.forms import ExportForm
 from unfold.decorators import display
 
@@ -14,32 +14,6 @@ from ..models import Transaction, TransactionService
 from common.admin import BaseModelAdmin
 from ..resources import TransactionResource
 
-
-class PatientNameFilter(TextFilter):
-    title = "По пациенту"
-    parameter_name = "patient_name"
-
-    def queryset(self, request, queryset):
-        value = self.value()
-        if not value:
-            return queryset
-        return queryset.filter(
-            Q(patient__first_name__icontains=value) |
-            Q(patient__last_name__icontains=value)
-        )
-
-class StaffNameFilter(TextFilter):
-    title = "По сотруднику"
-    parameter_name = "staff_name"
-
-    def queryset(self, request, queryset):
-        value = self.value()
-        if not value:
-            return queryset
-        return queryset.filter(
-            Q(staff__first_name__icontains=value) |
-            Q(staff__last_name__icontains=value)
-        )
 
 class TransactionServiceInline(TabularInline):
     model = TransactionService
@@ -81,8 +55,8 @@ class TransactionAdmin(SimpleHistoryAdmin, BaseModelAdmin, ExportActionModelAdmi
 
     def get_list_filter(self, request):
         list_filter = (
-            PatientNameFilter,
-            StaffNameFilter,
+            ("patient", RelatedDropdownFilter),
+            ("staff", RelatedDropdownFilter),
             "pay_method",
             "status",
             "organization",
@@ -92,8 +66,8 @@ class TransactionAdmin(SimpleHistoryAdmin, BaseModelAdmin, ExportActionModelAdmi
             pass
         elif request.user.role in (ROLE_ADMIN, ROLE_DOCTOR, ROLE_ACCOUNTANT):
             list_filter = (
-                PatientNameFilter,
-                StaffNameFilter,
+                ("patient", RelatedDropdownFilter),
+                ("staff", RelatedDropdownFilter),
                 "pay_method",
                 "status",
                 ("created_at", RangeDateTimeFilter)

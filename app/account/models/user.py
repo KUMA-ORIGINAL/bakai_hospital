@@ -134,13 +134,6 @@ class User(AbstractUser):
         blank=True,
         verbose_name='Организация'
     )
-    room = models.ForeignKey(
-        'organizations.Room',
-        on_delete=models.SET_NULL,
-        null=True,
-        blank=True,
-        verbose_name='Кабинет'
-    )
 
     username = None
     USERNAME_FIELD = "email"

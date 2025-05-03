@@ -12,6 +12,13 @@ class Room(models.Model):
         null=True,
         verbose_name="Отдел"
     )
+    doctors = models.ManyToManyField(
+        'account.User',
+        blank=True,
+        related_name='rooms',
+        verbose_name='Врачи',
+        limit_choices_to = {'role': 'doctor'},
+    )
     services = models.ManyToManyField(
         'services.Service',
         blank=True,

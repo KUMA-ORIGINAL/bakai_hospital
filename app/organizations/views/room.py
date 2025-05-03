@@ -11,6 +11,6 @@ from organizations.serializers import RoomSerializer
 class RoomViewSet(viewsets.GenericViewSet,
                   mixins.RetrieveModelMixin):
     queryset = Room.objects.select_related('building', 'department') \
-        .prefetch_related('services', 'user_set')
+        .prefetch_related('services', 'doctors')
     serializer_class = RoomSerializer
 

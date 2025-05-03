@@ -10,7 +10,7 @@ from .building import BuildingSerializer
 
 class RoomSerializer(serializers.ModelSerializer):
     services = ServiceSerializer(many=True, read_only=True)
-    doctors = UserSerializer(many=True, read_only=True, source='user_set')
+    doctors = UserSerializer(many=True, read_only=True)
     building = BuildingSerializer(read_only=True)
     department = DepartmentSerializer(read_only=True)
 
