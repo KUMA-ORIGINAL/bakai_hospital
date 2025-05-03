@@ -8,9 +8,11 @@ from common.admin import BaseModelAdmin
 
 @admin.register(Service)
 class ServiceAdmin(BaseModelAdmin, TabbedTranslationAdmin):
-    search_fields = ("name", "organization__name")
+    search_fields = ("name",)
     ordering = ("name",)
     list_per_page = 50
+
+    list_select_related = ('payout_account', 'organization')
 
     def get_list_filter(self, request):
         list_filter = ("organization",)

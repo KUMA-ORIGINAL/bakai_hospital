@@ -160,9 +160,11 @@ class TransactionAdmin(SimpleHistoryAdmin, BaseModelAdmin, ExportActionModelAdmi
             .select_related(
                 "patient",
                 "staff",
-                "staff__room",
-                "staff__room__department",
                 "organization",
+            )
+            .prefetch_related(
+                "staff__rooms",  # ✅ M2M
+                "staff__rooms__department",  # ✅ вложенный prefetch
             )
         )
 
