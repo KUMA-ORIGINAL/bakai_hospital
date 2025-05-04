@@ -6,6 +6,7 @@ from .views import RoomViewSet
 
 router = DefaultRouter()
 router.register(r'rooms', RoomViewSet)
+router.register(r'organizations', RoomViewSet)
 
 urlpatterns = [
     path('', include(router.urls)),
