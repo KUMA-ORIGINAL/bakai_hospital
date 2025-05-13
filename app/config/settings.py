@@ -249,7 +249,7 @@ SPECTACULAR_SETTINGS = {
         'drf_spectacular.contrib.djangorestframework_camel_case.camelize_serializer_fields',
     ],
 
-    'SERVE_PUBLIC': False,
+    'SERVE_PUBLIC': True,
     'SERVE_HTTPS': True,
     'SERVE_PERMISSIONS': ['config.permissions.IsSuperUser'],
     'SERVE_AUTHENTICATION': ['rest_framework.authentication.SessionAuthentication',]
