@@ -64,6 +64,30 @@ class RoomAdmin(BaseModelAdmin):
             list_display = ("room_number", "floor", "building", 'detail_link_view')
         return list_display
 
+    def get_fields(self, request, obj=None):
+        fields = super().get_fields(request, obj)
+
+        if request.user.role == ROLE_DOCTOR:
+            new_fields = []
+            for field in fields:
+                if field == 'building':
+                    new_fields.append('building_text')
+                elif field == 'department':
+                    new_fields.append('department_text')
+                else:
+                    new_fields.append(field)
+            return new_fields
+
+        return fields
+
+    def building_text(self, obj):
+        return obj.building.name if obj.building else "-"
+    building_text.short_description = "Здание"
+
+    def department_text(self, obj):
+        return obj.department.name if obj.department else "-"
+    department_text.short_description = "Отдел"
+
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         if request.user.is_superuser:

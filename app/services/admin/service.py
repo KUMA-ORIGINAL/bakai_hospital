@@ -36,8 +36,10 @@ class ServiceAdmin(BaseModelAdmin, TabbedTranslationAdmin):
         exclude = ()
         if request.user.is_superuser:
             pass
-        elif request.user.role in (ROLE_ADMIN, ROLE_ACCOUNTANT, ROLE_DOCTOR):
+        elif request.user.role in (ROLE_ADMIN, ROLE_ACCOUNTANT):
             exclude = ('organization',)
+        elif request.user.role == ROLE_DOCTOR:
+            exclude = ('organization', 'payout_account')
         return exclude
 
     def save_model(self, request, obj, form, change):
@@ -45,10 +47,20 @@ class ServiceAdmin(BaseModelAdmin, TabbedTranslationAdmin):
             obj.organization = request.user.organization
         super().save_model(request, obj, form, change)
 
+    def get_readonly_fields(self, request, obj=None):
+        readonly = super().get_readonly_fields(request, obj)
+        if request.user.role == ROLE_DOCTOR:
+            return readonly + ('payout_account_text',)
+        return readonly
+
+    def payout_account_text(self, obj):
+        return str(obj.payout_account) if obj.payout_account else "-"
+    payout_account_text.short_description = "Счёт для выплат"
+
     def get_queryset(self, request):
         qs = super().get_queryset(request)
         if request.user.is_superuser:
             return qs
-        elif request.user.role in(ROLE_ADMIN, ROLE_ACCOUNTANT, ROLE_DOCTOR):
+        elif request.user.role in (ROLE_ADMIN, ROLE_ACCOUNTANT, ROLE_DOCTOR):
             return qs.filter(organization=request.user.organization)
         return qs
