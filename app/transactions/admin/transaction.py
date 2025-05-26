@@ -117,12 +117,12 @@ class TransactionAdmin(SimpleHistoryAdmin, BaseModelAdmin, ExportActionModelAdmi
         if request.user.is_superuser:
             fields = (
                 "created_at", "patient", "staff", "total_price", "comment", "phone_number",
-                "pay_method", "status", "organization"
+                "pay_method", "status", 'payment_link', "organization"
             )
         elif request.user.role in (ROLE_ADMIN, ROLE_DOCTOR, ROLE_ACCOUNTANT):
             fields = (
                 "created_at", "patient", "staff", "total_price", "comment", "phone_number",
-                "pay_method", "status",
+                "pay_method", "status", 'payment_link',
             )
         return (
             (None, {"fields": fields}),

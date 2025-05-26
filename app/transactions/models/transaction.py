@@ -20,6 +20,7 @@ class Transaction(models.Model):
         verbose_name="Статус оплаты",
         default="pending"
     )
+    payment_link = models.URLField("Платежная ссылка", null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата транзакции")
     history = HistoricalRecords()
     organization = models.ForeignKey(

@@ -34,7 +34,7 @@ class TransactionViewSet(viewsets.GenericViewSet,
 
         transactions = (
             Transaction.objects
-            .filter(patient=patient)
+            .filter(patient=patient, status='success')
             .select_related('patient', 'staff')  # ForeignKey
             .prefetch_related(
                 Prefetch(
