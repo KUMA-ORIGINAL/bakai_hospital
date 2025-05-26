@@ -18,6 +18,10 @@ class PatientSerializer(serializers.ModelSerializer):
 
 
 class PatientCreateSerializer(serializers.ModelSerializer):
+    date_of_birth = serializers.DateField(
+        input_formats=["%d-%m-%Y"],  # Вот здесь мы разрешаем нужный формат
+        format="%Y-%m-%d"  # Формат, в котором будет возвращаться дата
+    )
 
     class Meta:
         model = Patient
