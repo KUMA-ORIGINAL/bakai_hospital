@@ -1,23 +1,27 @@
 #!/bin/sh
 
-# Convert env variable to lowercase
+# Приводим GET_CERTS к нижнему регистру
 get_certs_lower=$(echo "$GET_CERTS" | tr '[:upper:]' '[:lower:]')
 
-# Check lowercase value of env variable
+# Если GET_CERTS=true
 if [ "$get_certs_lower" = "true" ]; then
 
-    folder_path="/etc/letsencrypt/live/$DOMAIN"
-    # If path exists then let certbot rewrite nginx config
-    if [ -d "$folder_path" ]; then
-        certbot -n --nginx -d "$DOMAIN"
-        nginx -s stop
-        # Need time for stop
-        sleep 2
-    # Else get certs and rewrite nginx config
-    else
-        certbot --nginx --email "$CERTBOT_EMAIL" --agree-tos --no-eff-email -d "$DOMAIN"
-        nginx -s stop
-        sleep 2
-    fi
+    domains="$DOMAIN $CORE_DOMAIN"
 
+    for domain in $domains; do
+        folder_path="/etc/letsencrypt/live/$domain"
+
+        if [ -d "$folder_path" ]; then
+            echo "🔁 Сертификат уже есть для $domain, обновляем..."
+            certbot -n --nginx -d "$domain" -d "www.$domain"
+        else
+            echo "🆕 Получаем новый сертификат для $domain..."
+            certbot --nginx --email "$CERTBOT_EMAIL" --agree-tos --no-eff-email -d "$domain" -d "www.$domain"
+        fi
+    done
+
+    # Перезапуск nginx после получения всех сертификатов
+    echo "🔄 Перезапуск nginx..."
+    nginx -s stop
+    sleep 2
 fi
