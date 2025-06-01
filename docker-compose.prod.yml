@@ -62,7 +62,6 @@ services:
       - static_volume:/app/static
       - media_volume:/app/media
       - certs:/etc/letsencrypt
-      - ./nginx/html:/var/www/${CORE_DOMAIN}
     depends_on:
       - backend
       - frontend
