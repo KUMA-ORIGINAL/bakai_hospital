@@ -9,15 +9,15 @@ if [ "$get_certs_lower" = "true" ]; then
     domains="$DOMAIN $CORE_DOMAIN"
 
     for domain in $domains; do
-        folder_path="/etc/letsencrypt/live/$domain"
+#        folder_path="/etc/letsencrypt/live/$domain"
 
-        if [ -d "$folder_path" ]; then
-            echo "🔁 Сертификат уже есть для $domain, обновляем..."
-            certbot -n --nginx -d "$domain" -d "www.$domain"
-        else
-            echo "🆕 Получаем новый сертификат для $domain..."
-            certbot --nginx --email "$CERTBOT_EMAIL" --agree-tos --no-eff-email -d "$domain" -d "www.$domain"
-        fi
+#        if [ -d "$folder_path" ]; then
+#            echo "🔁 Сертификат уже есть для $domain, обновляем..."
+#            certbot -n --nginx -d "$domain" -d "www.$domain"
+#        else
+        echo "🆕 Получаем новый сертификат для $domain..."
+        certbot --nginx --email "$CERTBOT_EMAIL" --agree-tos --no-eff-email -d "$domain" -d "www.$domain"
+#        fi
     done
 
     # Перезапуск nginx после получения всех сертификатов
