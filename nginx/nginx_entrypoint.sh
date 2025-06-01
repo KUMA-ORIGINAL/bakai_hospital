@@ -16,7 +16,7 @@ if [ "$get_certs_lower" = "true" ]; then
 #            certbot -n --nginx -d "$domain" -d "www.$domain"
 #        else
         echo "🆕 Получаем новый сертификат для $domain..."
-        certbot --nginx --email "$CERTBOT_EMAIL" --agree-tos --no-eff-email -d "$domain" -d "www.$domain"
+        certbot --nginx --email "$CERTBOT_EMAIL" --agree-tos --no-eff-email -d "$domain"
 #        fi
     done
 
