@@ -14,6 +14,8 @@ if [ "$get_certs_lower" = "true" ]; then
             --non-interactive \
             --expand \
             -d "$domain"
+        nginx -s stop
+        sleep 2
     done
 
     echo "🔄 Перезапуск nginx..."
