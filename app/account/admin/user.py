@@ -75,7 +75,7 @@ class UserAdmin(UserAdmin, BaseModelAdmin):
         list_filter = ('role', 'status', 'is_active', 'is_staff',)
         if request.user.is_superuser:
             pass
-        elif request.user.role == ROLE_ADMIN:
+        elif request.user.role in (ROLE_ADMIN, ROLE_ACCOUNTANT):
             list_filter = ('role', 'status')
         return list_filter
 
@@ -85,6 +85,8 @@ class UserAdmin(UserAdmin, BaseModelAdmin):
             pass
         elif request.user.role == ROLE_ADMIN:
             list_display = ('email', 'first_name', 'last_name', 'role', 'position', 'specialization', 'status', 'detail_link')
+        elif request.user.role == ROLE_ACCOUNTANT:
+            list_display = ('email', 'first_name', 'last_name', 'role', 'position', 'specialization', 'status', 'detail_link_view')
         return list_display
 
     def get_fieldsets(self, request, obj=None):
