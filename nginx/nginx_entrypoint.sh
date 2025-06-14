@@ -13,8 +13,9 @@ if [ "$get_certs_lower" = "true" ]; then
             --email "$CERTBOT_EMAIL" \
             --agree-tos \
             --no-eff-email \
-            -d "$domain" -d "www.$domain" \
-            --non-interactive
+            --non-interactive \
+            --expand \
+            -d "$domain" -d "www.$domain"
     done
 
     # Перезапуск nginx после получения всех сертификатов (на всякий случай)
