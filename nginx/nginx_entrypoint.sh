@@ -13,7 +13,7 @@ if [ "$get_certs_lower" = "true" ]; then
             --no-eff-email \
             --non-interactive \
             --expand \
-            -d "$domain" -d "www.$domain"
+            -d "$domain"
     done
 
     echo "🔄 Перезапуск nginx..."
