@@ -22,84 +22,23 @@
             <span class="text-blue-600">i</span>med
           </span>
         </div>
-
-        <div class="flex items-center space-x-6">
-          <!-- Навигация -->
-          <nav class="hidden md:block">
-            <ul class="flex space-x-8">
-              <li>
-                <a href="#about" class="text-blue-800 hover:text-blue-600 transition-colors duration-200">
-                  О нас
-                </a>
-              </li>
-              <li>
-                <a href="#organizations" class="text-blue-800 hover:text-blue-600 transition-colors duration-200">
-                  Организации
-                </a>
-              </li>
-              <li>
-                <a href="#contacts" class="text-blue-800 hover:text-blue-600 transition-colors duration-200">
-                  Контакты
-                </a>
-              </li>
-            </ul>
-          </nav>
-
-          <!-- Языковое меню -->
-          <!-- <div class="relative">
-            <button id="langButton" class="flex items-center text-blue-800 font-medium" onclick="toggleDropdown()">
-              RU
-              <svg class="ml-1 w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24"
-                xmlns="http://www.w3.org/2000/svg">
-                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M19 9l-7 7-7-7" />
-              </svg>
-            </button>
-            <div id="langDropdown"
-              class="absolute right-0 mt-2 w-24 bg-white rounded-md shadow-lg overflow-hidden z-20 hidden">
-              <div class="py-1">
-                <button class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 w-full text-left"
-                  onclick="changeLanguage('RU')">
-                  Русский
-                </button>
-                <button class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 w-full text-left"
-                  onclick="changeLanguage('KG')">
-                  Кыргызча
-                </button>
-                <button class="block px-4 py-2 text-sm text-gray-700 hover:bg-blue-50 w-full text-left"
-                  onclick="changeLanguage('EN')">
-                  English
-                </button>
-              </div>
-            </div>
-          </div> -->
-        </div>
       </div>
     </header>
     <main class="flex-grow">
-      <section class='pt-24 pb-12 md:pt-32 md:pb-16 bg-gradient-to-b from-blue-50 to-white'>
+      <section class='pt-12 pb-12 md:pt-24 md:pb-2 bg-gradient-to-b from-blue-50 to-white'>
         <div class='container mx-auto px-4 md:px-6'>
           <div class='max-w-3xl mx-auto text-center'>
             <h1 class='text-3xl md:text-4xl lg:text-5xl font-bold text-blue-900 mb-4'>
-              Единая медицинская информационная система
+              Единая медицинская платежная система
             </h1>
             <p class='text-lg text-blue-700 mb-8'>
               Объединяем лучшие медицинские учреждения Кыргызстана для обеспечения
               качественной медицинской помощи
             </p>
-            <div class='flex flex-col sm:flex-row justify-center gap-4'>
-              <a href='#organizations'
-                class='px-6 py-3 bg-blue-600 text-white rounded-md shadow-md hover:bg-blue-700 transition-colors duration-300'>
-                Наши организации
-              </a>
-              <a href='#contacts'
-                class='px-6 py-3 border border-blue-600 text-blue-600 rounded-md hover:bg-blue-50 transition-colors duration-300'>
-                Связаться с нами
-              </a>
-            </div>
           </div>
         </div>
       </section>
-      <section id='organizations' class='pt-16 pb-[250px] bg-blue-50'>
+      <section id='organizations' class='pt-16 pb-[100px] bg-blue-50'>
         <div class='container mx-auto px-4 md:px-6'>
           <div class='text-center mb-12'>
             <h2 class='text-3xl font-bold text-blue-900 mb-4'>
@@ -117,7 +56,7 @@
       </section>
     </main>
     <footer id='contacts' class='bg-blue-900 text-white'>
-      <div class='container mx-auto px-4 md:px-6 pt-[50px] pb-[20px]'>
+      <div class='container mx-auto px-4 md:px-6 pt-[20px] pb-[20px]'>
         <div class=''>
           <div>
             <div class='flex items-center mb-4'>
@@ -130,9 +69,7 @@
               </span>
             </div>
             <p class='text-blue-200 mb-6'>
-              Единая медицинская информационная система Кыргызстана,
-              объединяющая ведущие медицинские учреждения для повышения качества
-              и доступности медицинских услуг.
+              Единая медицинская платежная система Кыргызстана, объединяющая ведущие медицинские учреждения для повышения качества и доступности медицинских услуг.
             </p>
           </div>
 
@@ -142,15 +79,10 @@
             </h3>
             <ul class='space-y-4 md:space-y-0 md:flex md:gap-[40px]'>
               <li class='flex items-start'>
-                <span class='text-blue-200'>+996 (312) 123-456</span>
+                <a href="tel:+996706204501" class='text-blue-200'>+996 706 204 501</a>
               </li>
               <li class='flex items-start'>
-                <span class='text-blue-200'>info@imed.kg</span>
-              </li>
-              <li class='flex items-start'>
-                <span class='text-blue-200'>
-                  г. Бишкек, ул. Киевская 95
-                </span>
+                <a href="mailto:adamtechkg@gmail.com" class='text-blue-200'>adamtechkg@gmail.com</a>
               </li>
             </ul>
           </div>
