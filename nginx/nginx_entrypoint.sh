@@ -40,7 +40,7 @@ if [ "$get_certs_lower" = "true" ]; then
             --non-interactive \
             --expand \
             --keep-until-expiring \
-            -d "$domain" -d "www.$domain"; then
+            -d "$domain"; then
 
             echo "✅ Сертификат для $domain успешно получен/обновлен"
             cert_obtained=true
