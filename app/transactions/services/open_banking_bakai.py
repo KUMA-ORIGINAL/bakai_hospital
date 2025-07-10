@@ -27,7 +27,7 @@ def generate_payment_link(transaction):
     }
 
     try:
-        response = requests.post(PAYMENT_API_URL, json=payload, headers=headers, timeout=10)
+        response = requests.post(PAYMENT_API_URL, json=payload, headers=headers, timeout=20)
 
         if response.status_code == 200:
             data = response.json()
