@@ -8,7 +8,7 @@ from common.admin import BaseModelAdmin
 
 @admin.register(Service)
 class ServiceAdmin(BaseModelAdmin, TabbedTranslationAdmin):
-    search_fields = ("name",)
+    search_fields = ("name", 'price')
     ordering = ("name",)
     list_per_page = 50
 

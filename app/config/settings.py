@@ -275,9 +275,8 @@ LOGGING = {
     'version': 1,
     'disable_existing_loggers': False,
     'formatters': {
-        'verbose': {
-            'format': '{levelname} - {asctime} - {module} - {name} - {message}',
-            'style': '{',
+        "verbose": {
+            "format": "%(levelname)s %(asctime)s %(module)s %(process)d %(thread)d %(message)s",
         },
         'simple': {
             'format': '{levelname} - {module} - {message}',
@@ -288,7 +287,7 @@ LOGGING = {
         'console': {
             'level': 'INFO',
             'class': 'logging.StreamHandler',
-            'formatter': 'simple',
+            'formatter': 'verbose',
         },
         'file': {
             'level': 'INFO',
@@ -407,12 +406,12 @@ UNFOLD = {
                         "icon": "medical_services",
                         "link": reverse_lazy("admin:services_service_changelist"),
                     },
-                    # {
-                    #     "title": _("Категории"),
-                    #     "icon": "category",
-                    #     "link": reverse_lazy("admin:services_category_changelist"),
-                    #     'permission': 'account.admin_permissions.permission_callback_for_doctor_and_accountant',
-                    # },
+                    {
+                        "title": _("Категории"),
+                        "icon": "category",
+                        "link": reverse_lazy("admin:services_category_changelist"),
+                        'permission': 'account.admin_permissions.permission_callback_for_doctor_and_accountant',
+                    },
                 ],
             },
             {

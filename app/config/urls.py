@@ -22,8 +22,10 @@ from django.urls import path, include
 from drf_spectacular.views import SpectacularAPIView, SpectacularSwaggerView
 
 from config.views import health_check
+from services.views import get_services_by_category
 
 urlpatterns = [
+    path('admin/get_services_by_category/', get_services_by_category, name='get_services_by_category'),
     path('admin/', admin.site.urls),
 
     path('api/schema/', SpectacularAPIView.as_view(), name='schema'),

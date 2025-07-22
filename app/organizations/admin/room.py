@@ -1,22 +1,47 @@
+from django import forms
 from django.contrib import admin
 from django.http import HttpResponse
 from django.shortcuts import get_object_or_404
 from unfold.decorators import action
+from unfold.widgets import UnfoldAdminCheckboxSelectMultiple
 
 from account.models import ROLE_ADMIN, ROLE_ACCOUNTANT, ROLE_DOCTOR
+from services.models import Category
 from ..models import Room, Building, Department
 from common.admin import BaseModelAdmin
 from ..services import generate_qr_pdf
 
 
+class RoomForm(forms.ModelForm):
+    categories = forms.ModelMultipleChoiceField(
+        queryset=Category.objects.all(),
+        required=False,
+        label='Категории (для автозаполнения услуг)',
+        widget=UnfoldAdminCheckboxSelectMultiple
+    )
+
+    class Meta:
+        model = Room
+        fields = "__all__"  # можно добавить другие поля
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        # category — не сохраняется в Room!
+
+
 @admin.register(Room)
 class RoomAdmin(BaseModelAdmin):
+    form = RoomForm
+
     search_fields = ("room_number", "building__name",)
     list_filter = ("building", "floor")
     ordering = ("room_number",)
     autocomplete_fields = ("services", 'doctors')
 
     actions_detail = ('download_qr_actions_detail',)
+
+    class Media:
+        js = ('js/autofill_services.js',)
 
     @action(
         description="Cкачать qr-code",
