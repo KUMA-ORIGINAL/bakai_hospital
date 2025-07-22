@@ -23,3 +23,4 @@ for category_name, services in categories.items():
         except Service.DoesNotExist:
             # Не создаём услугу!
             print(f'Услуга "{service["Наименование"]}" не найдена, не создаём.')
+
