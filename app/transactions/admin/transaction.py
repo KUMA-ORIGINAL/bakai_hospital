@@ -1,3 +1,4 @@
+from django import forms
 from django.contrib import admin
 from django.db.models import Prefetch
 from django.utils.html import format_html
@@ -43,6 +44,11 @@ class TransactionAdmin(SimpleHistoryAdmin, BaseModelAdmin, ExportActionModelAdmi
 
     export_form_class = ExportForm
 
+    class Media:
+        css = {
+            'all': ('admin/admin_extra.css',)
+        }
+
     def get_list_before_template(self, request):
         if request.user.role == ROLE_DOCTOR:
             return "transactions/transaction_list_before.html"
@@ -52,6 +58,12 @@ class TransactionAdmin(SimpleHistoryAdmin, BaseModelAdmin, ExportActionModelAdmi
         extra_context = extra_context or {}
         self.list_before_template = self.get_list_before_template(request)
         return super().changelist_view(request, extra_context=extra_context)
+
+    def get_changelist_instance(self, request):
+        # временно подменяем list_editable для остальных ролей
+        if request.user.role == ROLE_DOCTOR:
+            self.list_editable = ("service_provided", "service_note")
+        return super().get_changelist_instance(request)
 
     def get_list_filter(self, request):
         list_filter = (
@@ -81,8 +93,10 @@ class TransactionAdmin(SimpleHistoryAdmin, BaseModelAdmin, ExportActionModelAdmi
             pass
         elif request.user.role in (ROLE_ADMIN,):
             list_display = ("id", "patient", "staff", "total_price", "pay_method", "status", "created_at", 'detail_link')
-        elif request.user.role in (ROLE_DOCTOR, ROLE_ACCOUNTANT):
+        elif request.user.role == ROLE_ACCOUNTANT:
             list_display = ("id", "patient", "staff", "total_price", "pay_method", "status", "created_at", 'detail_link_view')
+        elif request.user.role == ROLE_DOCTOR:
+            list_display = ("id", "patient", "staff", "total_price", "pay_method", "status", "created_at", "service_provided", "service_note", 'detail_link_view')
         return list_display
 
     @display(description="Услуги", dropdown=True)
@@ -117,12 +131,12 @@ class TransactionAdmin(SimpleHistoryAdmin, BaseModelAdmin, ExportActionModelAdmi
         if request.user.is_superuser:
             fields = (
                 "created_at", "patient", "staff", "total_price", "comment", "phone_number",
-                "pay_method", "status", 'payment_link', "organization"
+                "pay_method", "status", 'payment_link', "service_provided", "service_note", "organization"
             )
         elif request.user.role in (ROLE_ADMIN, ROLE_DOCTOR, ROLE_ACCOUNTANT):
             fields = (
                 "created_at", "patient", "staff", "total_price", "comment", "phone_number",
-                "pay_method", "status", 'payment_link',
+                "pay_method", "status", 'payment_link', "service_provided", "service_note",
             )
         return (
             (None, {"fields": fields}),
@@ -165,7 +179,7 @@ class TransactionAdmin(SimpleHistoryAdmin, BaseModelAdmin, ExportActionModelAdmi
         )
 
     def has_change_permission(self, request, obj=None):
-        if request.user.is_superuser:
+        if request.user.is_superuser or request.user.role == ROLE_DOCTOR:
             return True
         return False
 

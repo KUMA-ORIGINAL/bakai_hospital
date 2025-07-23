@@ -1,0 +1,4 @@
+textarea[name$="service_note"] {
+    min-height: 24px !important;
+    max-height: 60px !important;
+}
