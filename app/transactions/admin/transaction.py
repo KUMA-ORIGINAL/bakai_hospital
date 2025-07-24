@@ -99,6 +99,18 @@ class TransactionAdmin(SimpleHistoryAdmin, BaseModelAdmin, ExportActionModelAdmi
             list_display = ("id", "patient", "staff", "total_price", "pay_method", "status", "created_at", "service_provided", "service_note", 'detail_link_view')
         return list_display
 
+    def get_readonly_fields(self, request, obj=None):
+        if request.user.is_superuser:
+            return self.readonly_fields
+        if request.user.role == ROLE_DOCTOR:
+            # Все поля readonly, кроме service_provided и service_note
+            all_fields = [
+                "created_at", "patient", "staff", "total_price", "comment",
+                "phone_number", "pay_method", "status", "payment_link", "organization"
+            ]
+            return self.readonly_fields + tuple(all_fields)
+        return self.readonly_fields
+
     @display(description="Услуги", dropdown=True)
     def display_service(self, instance):
         services = list(instance.services.all())
