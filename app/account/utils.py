@@ -7,16 +7,15 @@ from django.conf import settings
 
 logger = logging.getLogger(__name__)
 
+logger.info("Инициализация клиента OpenAI")
+client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
+
 
 def send_to_openai(front_image_base64, back_image_base64):
     """
     Отправка изображений паспорта в OpenAI для извлечения данных.
     """
     try:
-        logger.info("Инициализация клиента OpenAI")
-        client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
-
-        # Новый, усиленный Prompt
         messages = [
             {
                 "role": "system",
