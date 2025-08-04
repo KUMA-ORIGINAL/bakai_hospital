@@ -61,8 +61,9 @@ class UserAdmin(UserAdmin, BaseModelAdmin):
     list_display_links = ('id', 'email')
     search_fields = ('email', 'first_name', 'last_name', 'role')
     ordering = ('-date_joined',)
-    autocomplete_fields = ('groups',)
+    autocomplete_fields = ('groups', 'services')
     list_per_page = 20
+    list_select_related = ('organization',)
 
     add_fieldsets = (
         (None, {
@@ -105,7 +106,7 @@ class UserAdmin(UserAdmin, BaseModelAdmin):
             }),
             ("Личная информация", {
                 "fields": (
-                    "first_name", "last_name", "patronymic", "role", "status", "birthdate", "phone_number",
+                    "first_name", "last_name", "patronymic", "role", 'services', "status", "birthdate", "phone_number",
                     "position", "specialization", "telegram_id", "comment", "photo"
                 ),
             }),

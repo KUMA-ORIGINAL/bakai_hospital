@@ -126,7 +126,13 @@ class User(AbstractUser):
         blank=True,
         verbose_name='Роль'
     )
-
+    services = models.ManyToManyField(
+        'services.Service',
+        blank=True,
+        related_name='user_services',
+        verbose_name='Услуги',
+        help_text='Услуги, которые пользователь имеет право предоставлять'
+    )
     organization = models.ForeignKey(
         'organizations.Organization',
         on_delete=models.CASCADE,

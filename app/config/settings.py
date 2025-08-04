@@ -407,6 +407,11 @@ UNFOLD = {
                         "link": reverse_lazy("admin:services_service_changelist"),
                     },
                     {
+                        "title": _("Группы услуг"),
+                        "icon": "folder",
+                        "link": reverse_lazy("admin:services_servicegroup_changelist"),
+                    },
+                    {
                         "title": _("Категории"),
                         "icon": "category",
                         "link": reverse_lazy("admin:services_category_changelist"),
@@ -432,8 +437,20 @@ UNFOLD = {
                 "items": [
                     {
                         "title": _("Оплаченные услуги"),
-                        "icon": "account_balance_wallet",
+                        "icon": "paid",
+                        "link": lambda request: f"{reverse_lazy('admin:transactions_transaction_changelist')}?status__exact=success",
+                        "active": lambda request:
+                            request.path == reverse_lazy("admin:transactions_transaction_changelist")
+                            and "status__exact" in request.GET,
+                    },
+                    {
+                        "title": _("Все услуги"),
+                        "icon": "receipt_long",
                         "link": reverse_lazy("admin:transactions_transaction_changelist"),
+                        'permission': 'account.admin_permissions.permission_callback_for_doctor_and_accountant',
+                        "active": lambda request:
+                            request.path == reverse_lazy("admin:transactions_transaction_changelist")
+                            and "status__exact" not in request.GET,
                     },
                 ],
             },

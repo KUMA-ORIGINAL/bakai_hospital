@@ -12,7 +12,7 @@ class ServiceAdmin(BaseModelAdmin, TabbedTranslationAdmin):
     ordering = ("name",)
     list_per_page = 50
 
-    list_select_related = ('payout_account', 'organization')
+    list_select_related = ('payout_account', 'organization', 'category')
 
     def get_list_filter(self, request):
         list_filter = ("organization",)

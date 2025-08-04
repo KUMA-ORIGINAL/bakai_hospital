@@ -22,15 +22,6 @@ class Transaction(models.Model):
     )
     payment_link = models.URLField("Платежная ссылка", null=True, blank=True)
     created_at = models.DateTimeField(auto_now_add=True, verbose_name="Дата транзакции")
-    service_provided = models.BooleanField(
-        default=False,
-        verbose_name='Услуга оказана'
-    )
-    service_note = models.TextField(
-        blank=True,
-        null=True,
-        verbose_name='Комментарий врача'
-    )
     history = HistoricalRecords()
     organization = models.ForeignKey(
         'organizations.Organization',

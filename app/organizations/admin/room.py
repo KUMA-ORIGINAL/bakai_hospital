@@ -36,12 +36,22 @@ class RoomAdmin(BaseModelAdmin):
     search_fields = ("room_number", "building__name",)
     list_filter = ("building", "floor")
     ordering = ("room_number",)
-    autocomplete_fields = ("services", 'doctors')
+    autocomplete_fields = ("services", 'doctors', 'service_groups')
+    list_select_related = ('building', 'department')
 
     actions_detail = ('download_qr_actions_detail',)
 
     class Media:
         js = ('js/autofill_services.js',)
+
+    def get_queryset(self, request):
+        qs = super().get_queryset(request)
+
+        if request.user.is_superuser:
+            pass
+        elif request.user.role in (ROLE_ADMIN, ROLE_ACCOUNTANT, ROLE_DOCTOR):
+            qs = qs.filter(building__organization=request.user.organization)
+        return qs
 
     @action(
         description="Cкачать qr-code",
@@ -62,8 +72,8 @@ class RoomAdmin(BaseModelAdmin):
             site_text="ug.imed.kg",
             scan_text_ru="Отсканируйте камерой телефона",
             pay_text_ru="Оплачивайте через:",
-            scan_text_kg="Камераңыз менен сканердеңиз",
-            pay_text_kg="Төлөңүз аркылуу:"
+            scan_text_kg="Камераныз менен сканерлениз",
+            pay_text_kg="Төмөнкүлөр аркылуу төлөңүз:"
         )
         response = HttpResponse(output_pdf_stream, content_type='application/pdf')
         response['Content-Disposition'] = f'attachment; filename="qr_code_room_id_{object_id}.pdf"'
@@ -112,11 +122,3 @@ class RoomAdmin(BaseModelAdmin):
     def department_text(self, obj):
         return obj.department.name if obj.department else "-"
     department_text.short_description = "Отдел"
-
-    def get_queryset(self, request):
-        qs = super().get_queryset(request)
-        if request.user.is_superuser:
-            return qs
-        elif request.user.role in (ROLE_ADMIN, ROLE_ACCOUNTANT, ROLE_DOCTOR):
-            return qs.filter(building__organization=request.user.organization)
-        return qs

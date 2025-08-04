@@ -22,8 +22,14 @@ class Room(models.Model):
     services = models.ManyToManyField(
         'services.Service',
         blank=True,
-        related_name='services',
+        related_name='rooms_services',
         verbose_name='Услуги'
+    )
+    service_groups = models.ManyToManyField(
+        'services.ServiceGroup',
+        blank=True,
+        related_name='rooms',
+        verbose_name='Группы услуг'
     )
 
     def __str__(self):

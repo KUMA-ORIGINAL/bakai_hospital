@@ -18,8 +18,8 @@ class TransactionViewSet(viewsets.GenericViewSet,
         return TransactionDetailSerializer
 
     def get_queryset(self):
-        queryset = Transaction.objects.select_related('staff', 'patient') \
-                .prefetch_related(Prefetch(
+        queryset = Transaction.objects.select_related('staff', 'patient', 'organization') \
+            .prefetch_related(Prefetch(
                 'services',
                 queryset=TransactionService.objects.select_related('service')
             ))
