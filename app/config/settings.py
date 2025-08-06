@@ -80,6 +80,7 @@ MIDDLEWARE = [
     'corsheaders.middleware.CorsMiddleware',
     'djangorestframework_camel_case.middleware.CamelCaseMiddleWare',
     'config.middleware.LanguageMiddleware',
+    'config.middleware.LogRequestResponseMiddleware',
 
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -301,7 +302,7 @@ LOGGING = {
         #     'level': 'DEBUG',
         #     'handlers': ['console'],
         # },
-        'django': {
+        'root': {
             'handlers': ['console', 'file'],
             'level': 'INFO',
             'propagate': True,
