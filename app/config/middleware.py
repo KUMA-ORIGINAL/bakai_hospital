@@ -27,7 +27,9 @@ class LogRequestResponseMiddleware:
         self.get_response = get_response
 
     def __call__(self, request):
-        logger.info(f"REQUEST: path={request.path}, body={request.body}")
+        if request.path.startswith('/api/'):
+            logger.info(f"DRF REQUEST: path={request.path}, body={request.body}")
         response = self.get_response(request)
-        logger.info(f"RESPONSE: status={response.status_code}, content={response.content}")
+        if request.path.startswith('/api/'):
+            logger.info(f"DRF RESPONSE: status={response.status_code}, content={response.content[:300]}")
         return response
