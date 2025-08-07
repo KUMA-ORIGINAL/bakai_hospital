@@ -5,7 +5,7 @@ import re
 import openai
 from django.conf import settings
 
-logger = logging.getLogger(__name__)
+logger = logging.getLogger('account_utils')
 
 logger.info("Инициализация клиента OpenAI")
 client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)

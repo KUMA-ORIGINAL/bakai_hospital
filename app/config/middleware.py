@@ -25,11 +25,48 @@ class LanguageMiddleware:
 class LogRequestResponseMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
+        self.max_body_log_size = getattr(settings, 'MAX_BODY_LOG_SIZE', 1024 * 1024 * 10)  # 1KB default
+        self.skip_paths = getattr(settings, 'LOG_MIDDLEWARE_SKIP_PATHS', [''])
 
     def __call__(self, request):
+        # Skip logging for certain paths
+        if any(request.path.startswith(path) for path in self.skip_paths):
+            return self.get_response(request)
+
         if request.path.startswith('/api/'):
-            logger.info(f"DRF REQUEST: path={request.path}, body={request.body}")
+            try:
+                content_length = int(request.META.get('CONTENT_LENGTH', 0))
+                body_sample = request.body
+                logger.info(
+                    f"DRF REQUEST: method={request.method}, path={request.path}, "
+                    f"content_length={content_length}, "
+                    f"client_ip={self._get_client_ip(request)}, "
+                    f"body_sample={body_sample}"
+                )
+            except Exception as e:
+                logger.warning(f"Failed to log request: {str(e)}", exc_info=True)
+
         response = self.get_response(request)
+
         if request.path.startswith('/api/'):
-            logger.info(f"DRF RESPONSE: status={response.status_code}, content={response.content[:300]}")
+            try:
+                response_sample = response.content
+                content_length = len(response.content)
+                logger.info(
+                    f"DRF RESPONSE: status={response.status_code}, "
+                    f"content_length={content_length}, "
+                    f"content_type={response.get('Content-Type', '')}, "
+                    f"response_sample={response_sample}"
+                )
+            except Exception as e:
+                logger.warning(f"Failed to log response: {str(e)}", exc_info=True)
+
         return response
+
+    def _get_client_ip(self, request):
+        x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
+        if x_forwarded_for:
+            ip = x_forwarded_for.split(',')[0]
+        else:
+            ip = request.META.get('REMOTE_ADDR')
+        return ip
