@@ -1,3 +1,4 @@
+import json
 import logging
 
 from django.core.exceptions import RequestDataTooBig
@@ -41,16 +42,17 @@ class LogRequestResponseMiddleware:
                     body_sample = request.body
                 except RequestDataTooBig:
                     body_sample = b'[Request body too large to log]'
-                # Обрезаем, если слишком большой
+                # Обрезаем если слишком большой
                 if isinstance(body_sample, bytes) and len(body_sample) > self.max_body_log_size:
                     body_sample = body_sample[:self.max_body_log_size] + b'...[truncated]'
-                # Для лога преобразуем к строке (чтобы не было проблем с байтами)
-                body_sample_str = repr(body_sample)
+                # Декодируем для лога
+                content_type = request.META.get("CONTENT_TYPE", "")
+                body_sample_str = self._format_body_for_log(body_sample, content_type)
                 logger.info(
                     f"DRF REQUEST: method={request.method}, path={request.path}, "
                     f"content_length={content_length}, "
                     f"client_ip={self._get_client_ip(request)}, "
-                    f"body_sample={body_sample_str}"
+                    f"body_sample=\n{body_sample_str}"
                 )
             except Exception as e:
                 logger.warning(f"Failed to log request: {str(e)}", exc_info=True)
@@ -62,17 +64,17 @@ class LogRequestResponseMiddleware:
                 response_sample = response.content
                 if isinstance(response_sample, bytes) and len(response_sample) > self.max_body_log_size:
                     response_sample = response_sample[:self.max_body_log_size] + b'...[truncated]'
-                response_sample_str = repr(response_sample)
+                content_type = response.get('Content-Type', '')
+                response_sample_str = self._format_body_for_log(response_sample, content_type)
                 content_length = len(response.content)
                 logger.info(
                     f"DRF RESPONSE: status={response.status_code}, "
                     f"content_length={content_length}, "
-                    f"content_type={response.get('Content-Type', '')}, "
-                    f"response_sample={response_sample_str}"
+                    f"content_type={content_type}, "
+                    f"response_sample=\n{response_sample_str}"
                 )
             except Exception as e:
                 logger.warning(f"Failed to log response: {str(e)}", exc_info=True)
-
         return response
 
     def _get_client_ip(self, request):
@@ -82,3 +84,17 @@ class LogRequestResponseMiddleware:
         else:
             ip = request.META.get('REMOTE_ADDR')
         return ip
+
+    def _format_body_for_log(self, body: bytes, content_type: str = 'application/json') -> str:
+        try:
+            body_str = body.decode('utf-8')
+            if 'application/json' in content_type:
+                # Попробуйте отформатировать JSON красиво
+                try:
+                    parsed = json.loads(body_str)
+                    return json.dumps(parsed, ensure_ascii=False, indent=2)
+                except Exception:
+                    return body_str  # Не парсится как JSON, просто строка
+            return body_str
+        except Exception:
+            return repr(body)  # Не декодируется, оставьте как есть
