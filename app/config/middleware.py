@@ -1,5 +1,6 @@
 import logging
 
+from django.core.exceptions import RequestDataTooBig
 from django.utils import translation
 from django.conf import settings
 
@@ -25,8 +26,8 @@ class LanguageMiddleware:
 class LogRequestResponseMiddleware:
     def __init__(self, get_response):
         self.get_response = get_response
-        self.max_body_log_size = getattr(settings, 'MAX_BODY_LOG_SIZE', 1024 * 1024 * 10)  # 1KB default
-        self.skip_paths = getattr(settings, 'LOG_MIDDLEWARE_SKIP_PATHS', [''])
+        self.max_body_log_size = getattr(settings, 'MAX_BODY_LOG_SIZE', 1024 * 1024)
+        self.skip_paths = getattr(settings, 'LOG_MIDDLEWARE_SKIP_PATHS', [])
 
     def __call__(self, request):
         # Skip logging for certain paths
@@ -34,14 +35,22 @@ class LogRequestResponseMiddleware:
             return self.get_response(request)
 
         if request.path.startswith('/api/'):
+            content_length = int(request.META.get('CONTENT_LENGTH', 0) or 0)
             try:
-                content_length = int(request.META.get('CONTENT_LENGTH', 0))
-                body_sample = request.body
+                try:
+                    body_sample = request.body
+                except RequestDataTooBig:
+                    body_sample = b'[Request body too large to log]'
+                # Обрезаем, если слишком большой
+                if isinstance(body_sample, bytes) and len(body_sample) > self.max_body_log_size:
+                    body_sample = body_sample[:self.max_body_log_size] + b'...[truncated]'
+                # Для лога преобразуем к строке (чтобы не было проблем с байтами)
+                body_sample_str = repr(body_sample)
                 logger.info(
                     f"DRF REQUEST: method={request.method}, path={request.path}, "
                     f"content_length={content_length}, "
                     f"client_ip={self._get_client_ip(request)}, "
-                    f"body_sample={body_sample}"
+                    f"body_sample={body_sample_str}"
                 )
             except Exception as e:
                 logger.warning(f"Failed to log request: {str(e)}", exc_info=True)
@@ -51,12 +60,15 @@ class LogRequestResponseMiddleware:
         if request.path.startswith('/api/'):
             try:
                 response_sample = response.content
+                if isinstance(response_sample, bytes) and len(response_sample) > self.max_body_log_size:
+                    response_sample = response_sample[:self.max_body_log_size] + b'...[truncated]'
+                response_sample_str = repr(response_sample)
                 content_length = len(response.content)
                 logger.info(
                     f"DRF RESPONSE: status={response.status_code}, "
                     f"content_length={content_length}, "
                     f"content_type={response.get('Content-Type', '')}, "
-                    f"response_sample={response_sample}"
+                    f"response_sample={response_sample_str}"
                 )
             except Exception as e:
                 logger.warning(f"Failed to log response: {str(e)}", exc_info=True)

@@ -197,11 +197,11 @@ if DEBUG:
     INSTALLED_APPS += ['silk']
     MIDDLEWARE.insert(0, 'silk.middleware.SilkyMiddleware')
 
-MAX_BODY_LOG_SIZE =  1024 * 1024
+MAX_BODY_LOG_SIZE =  1024 * 1024 * 2
 LOG_MIDDLEWARE_SKIP_PATHS = [
     '/api/process-passport/',
-    '/api//health/',
-    '/api/rooms',
+    '/api/health/',
+    '/api/rooms/',
 ]
 
 CACHES = {
