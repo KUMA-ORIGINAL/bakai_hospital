@@ -196,13 +196,6 @@ if DEBUG:
     INSTALLED_APPS += ['silk']
     MIDDLEWARE.insert(0, 'silk.middleware.SilkyMiddleware')
 
-MAX_BODY_LOG_SIZE =  1024 * 1024 * 2
-LOG_MIDDLEWARE_SKIP_PATHS = [
-    '/api/process-passport/',
-    '/api/health/',
-    '/api/rooms/',
-]
-
 CACHES = {
     'default': {
         'BACKEND': 'django_redis.cache.RedisCache',
@@ -225,6 +218,7 @@ CACHALOT_ONLY_CACHABLE_TABLES = {
     'services_payoutaccount',
     'account_user',
     'auth_group',
+    'transactions_transaction'
 }
 
 CHANNEL_LAYERS = {
