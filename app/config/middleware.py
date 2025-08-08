@@ -1,5 +1,6 @@
 import json
 import logging
+import re
 
 from django.core.exceptions import RequestDataTooBig
 from django.utils import translation
@@ -31,26 +32,15 @@ class LogRequestResponseMiddleware:
         self.skip_paths = getattr(settings, 'LOG_MIDDLEWARE_SKIP_PATHS', [])
 
     def __call__(self, request):
-        # Skip logging for certain paths
         if any(request.path.startswith(path) for path in self.skip_paths):
             return self.get_response(request)
 
         if request.path.startswith('/api/'):
-            content_length = int(request.META.get('CONTENT_LENGTH', 0) or 0)
             try:
-                try:
-                    body_sample = request.body
-                except RequestDataTooBig:
-                    body_sample = b'[Request body too large to log]'
-                # Обрезаем если слишком большой
-                if isinstance(body_sample, bytes) and len(body_sample) > self.max_body_log_size:
-                    body_sample = body_sample[:self.max_body_log_size] + b'...[truncated]'
-                # Декодируем для лога
-                content_type = request.META.get("CONTENT_TYPE", "")
-                body_sample_str = self._format_body_for_log(body_sample, content_type)
+                body_sample_str = self._safe_request_body(request)
                 logger.info(
                     f"DRF REQUEST: method={request.method}, path={request.path}, "
-                    f"content_length={content_length}, "
+                    f"content_length={request.META.get('CONTENT_LENGTH', 0)}, "
                     f"client_ip={self._get_client_ip(request)}, "
                     f"body_sample=\n{body_sample_str}"
                 )
@@ -61,40 +51,70 @@ class LogRequestResponseMiddleware:
 
         if request.path.startswith('/api/'):
             try:
-                response_sample = response.content
-                if isinstance(response_sample, bytes) and len(response_sample) > self.max_body_log_size:
-                    response_sample = response_sample[:self.max_body_log_size] + b'...[truncated]'
-                content_type = response.get('Content-Type', '')
-                response_sample_str = self._format_body_for_log(response_sample, content_type)
-                content_length = len(response.content)
+                body_sample_str = self._safe_response_body(response)
                 logger.info(
                     f"DRF RESPONSE: status={response.status_code}, "
-                    f"content_length={content_length}, "
-                    f"content_type={content_type}, "
-                    f"response_sample=\n{response_sample_str}"
+                    f"content_length={len(response.content) if hasattr(response, 'content') else 'N/A'}, "
+                    f"content_type={response.get('Content-Type', '')}, "
+                    f"response_sample=\n{body_sample_str}"
                 )
             except Exception as e:
                 logger.warning(f"Failed to log response: {str(e)}", exc_info=True)
+
         return response
 
     def _get_client_ip(self, request):
         x_forwarded_for = request.META.get('HTTP_X_FORWARDED_FOR')
-        if x_forwarded_for:
-            ip = x_forwarded_for.split(',')[0]
-        else:
-            ip = request.META.get('REMOTE_ADDR')
-        return ip
+        return x_forwarded_for.split(',')[0] if x_forwarded_for else request.META.get('REMOTE_ADDR')
 
-    def _format_body_for_log(self, body: bytes, content_type: str = 'application/json') -> str:
-        try:
-            body_str = body.decode('utf-8')
-            if 'application/json' in content_type:
-                # Попробуйте отформатировать JSON красиво
-                try:
-                    parsed = json.loads(body_str)
-                    return json.dumps(parsed, ensure_ascii=False, indent=2)
-                except Exception:
-                    return body_str  # Не парсится как JSON, просто строка
-            return body_str
-        except Exception:
-            return repr(body)  # Не декодируется, оставьте как есть
+    def _safe_request_body(self, request):
+        content_type = request.META.get("CONTENT_TYPE", "")
+
+        # multipart/form-data — показываем только поля и имена файлов
+        if "multipart/form-data" in content_type:
+            try:
+                fields = {k: v for k, v in request.POST.items()}
+                files = {k: f.name for k, f in request.FILES.items()}
+                return f"FIELDS: {json.dumps(fields, ensure_ascii=False)}, FILES: {files}"
+            except RequestDataTooBig:
+                return "[multipart/form-data too large to log]"
+            except Exception as e:
+                return f"[Failed to parse multipart body: {e}]"
+
+        # JSON
+        if "application/json" in content_type:
+            try:
+                body_str = request.body.decode("utf-8")
+                parsed = json.loads(body_str)
+                return json.dumps(parsed, ensure_ascii=False, indent=2)
+            except RequestDataTooBig:
+                return "[JSON body too large to log]"
+            except Exception:
+                return request.body[:self.max_body_log_size].decode("utf-8", errors="replace")
+
+        # Другие текстовые типы
+        if content_type.startswith("text/") or "application/x-www-form-urlencoded" in content_type:
+            try:
+                return request.body[:self.max_body_log_size].decode("utf-8", errors="replace")
+            except RequestDataTooBig:
+                return "[Text body too large to log]"
+            except Exception:
+                return "[Failed to decode text body]"
+
+        return f"[Non-text body type: {content_type}]"
+
+    def _safe_response_body(self, response):
+        content_type = response.get("Content-Type", "")
+
+        if content_type.startswith("application/json"):
+            try:
+                body_str = response.content.decode("utf-8")
+                parsed = json.loads(body_str)
+                return json.dumps(parsed, ensure_ascii=False, indent=2)
+            except Exception:
+                return "[Invalid JSON in response]"
+
+        if content_type.startswith("text/"):
+            return response.content[:self.max_body_log_size].decode("utf-8", errors="replace")
+
+        return f"[BINARY DATA OMITTED: {content_type}]"
