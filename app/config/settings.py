@@ -78,9 +78,8 @@ MIDDLEWARE = [
     'django.contrib.sessions.middleware.SessionMiddleware',
 
     'corsheaders.middleware.CorsMiddleware',
-    'djangorestframework_camel_case.middleware.CamelCaseMiddleWare',
     'config.middleware.LanguageMiddleware',
-    'config.middleware.LogRequestResponseMiddleware',
+    'djangorestframework_camel_case.middleware.CamelCaseMiddleWare',
 
     'django.middleware.common.CommonMiddleware',
     'django.middleware.csrf.CsrfViewMiddleware',
@@ -252,6 +251,7 @@ SPECTACULAR_SETTINGS = {
     'SCHEMA_VERSION': '3.1.0',
     'SERVE_INCLUDE_SCHEMA': False,
     'CAMELIZE_NAMES': True,
+    "COMPONENT_SPLIT_REQUEST": True,
 
     'POSTPROCESSING_HOOKS': [
         'drf_spectacular.contrib.djangorestframework_camel_case.camelize_serializer_fields',

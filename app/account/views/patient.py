@@ -1,26 +1,29 @@
 from django.shortcuts import get_object_or_404
-from drf_spectacular.utils import extend_schema, OpenApiParameter
-from rest_framework import viewsets, mixins
+from drf_spectacular.utils import extend_schema, OpenApiParameter, extend_schema_view
+from rest_framework import mixins
 from django.db.models import Q
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
+from common.views import BaseViewSet
 from ..models import Patient
 from ..serializers import PatientSerializer, PatientCreateSerializer
 
 
-@extend_schema(
-    tags=['Patient'],
-    parameters=[
-        OpenApiParameter(
-            name='search',
-            description='Поиск по INN',
-            required=False,
-            type=str
-        )
-    ]
+@extend_schema(tags=['Patient',])
+@extend_schema_view(
+    list=extend_schema(
+        parameters=[
+            OpenApiParameter(
+                name='search',
+                description='Поиск по INN',
+                required=False,
+                type=str
+            )
+        ]
+    )
 )
-class PatientViewSet(viewsets.GenericViewSet,
+class PatientViewSet(BaseViewSet,
                      mixins.ListModelMixin,
                      mixins.CreateModelMixin,):
 

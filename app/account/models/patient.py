@@ -46,8 +46,6 @@ class Patient(models.Model):
     )
     passport_front_photo = models.ImageField(
         upload_to='patients/passport_photos/%Y/%m/%d/',
-        blank=True,
-        null=True,
         verbose_name='Фото паспорта - передняя'
     )
     passport_back_photo = models.ImageField(

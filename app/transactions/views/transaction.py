@@ -1,14 +1,15 @@
 from django.db.models import Prefetch
-from rest_framework import viewsets, mixins, status
+from rest_framework import mixins, status
 from rest_framework.decorators import action
 from rest_framework.response import Response
 
 from account.models import Patient
+from common.views import BaseViewSet
 from ..models import Transaction, TransactionService
 from ..serializers import TransactionCreateSerializer, TransactionDetailSerializer
 
 
-class TransactionViewSet(viewsets.GenericViewSet,
+class TransactionViewSet(BaseViewSet,
                          mixins.CreateModelMixin,
                          mixins.RetrieveModelMixin):
 

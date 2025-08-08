@@ -38,6 +38,9 @@ class PatientCreateSerializer(serializers.ModelSerializer):
             'passport_back_photo',
             'passport_number',
         )
+        extra_kwargs = {
+            'passport_back_photo': {'required': True}
+        }
 
     def create(self, validated_data):
         organization = Organization.objects.filter(name='Национальный Госпиталь').first()

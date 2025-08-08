@@ -1,13 +1,14 @@
 from rest_framework import viewsets, status
 from rest_framework.response import Response
 
+from common.views import RequestResponseLogMixin
 from ..models import Transaction
 import logging
 
 logger = logging.getLogger(__name__)
 
 
-class PaymentWebhookViewSet(viewsets.ViewSet):
+class PaymentWebhookViewSet(RequestResponseLogMixin, viewsets.ViewSet):
     """
     ViewSet для обработки webhook от платёжной системы.
     """
