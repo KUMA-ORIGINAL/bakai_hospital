@@ -7,13 +7,13 @@ from django.conf import settings
 
 logger = logging.getLogger('account_utils')
 
-logger.info("Инициализация клиента OpenAI")
+logger.info("Инициализация клиента распознавания паспорта")
 client = openai.OpenAI(api_key=settings.OPENAI_API_KEY)
 
 
 def send_to_openai(front_image_base64, back_image_base64):
     """
-    Отправка изображений паспорта в OpenAI для извлечения данных.
+    Отправка изображений паспорта на распознавание и извлечение данных.
     """
     try:
         messages = [
@@ -53,14 +53,14 @@ def send_to_openai(front_image_base64, back_image_base64):
             }
         ]
 
-        logger.info("Отправка запроса в OpenAI")
+        logger.info("Отправка запроса на распознавание")
         response = client.chat.completions.create(
             model="gpt-4o",
             messages=messages
         )
 
         result_text = response.choices[0].message.content.strip()
-        logger.info(f"Ответ от OpenAI: {result_text}")
+        logger.info(f"Ответ: {result_text}")
 
         result_text = re.sub(r"^```json\s*|\s*```$", "", result_text.strip())
 
@@ -81,14 +81,15 @@ def send_to_openai(front_image_base64, back_image_base64):
 
             return extracted_data
 
-        return {"error": f"OpenAI не вернул JSON. Ответ: {result_text}"}
+        # Непредвиденный формат ответа
+        return {"error": "Не удалось распознать данные паспорта из изображения. Попробуйте загрузить другие изображения."}
 
     except json.JSONDecodeError as e:
         logger.error(f"Ошибка декодирования JSON: {str(e)}")
-        return {"error": "Ошибка декодирования JSON от OpenAI."}
+        return {"error": "Не удалось распознать данные паспорта. Попробуйте загрузить другие изображения."}
     except openai.OpenAIError as e:
-        logger.error(f"Ошибка OpenAI: {str(e)}")
-        return {"error": f"Ошибка OpenAI: {str(e)}"}
+        logger.error(f"Ошибка распознавания: {str(e)}")
+        return {"error": "Не удалось распознать данные паспорта. Попробуйте повторить попытку позже."}
     except Exception as e:
-        logger.exception("Неизвестная ошибка при работе send_to_openai")
-        return {"error": f"Неизвестная ошибка: {str(e)}"}
+        logger.exception("Неизвестная ошибка обработки паспорта")
+        return {"error": "Не удалось обработать данные паспорта. Попробуйте позже."}

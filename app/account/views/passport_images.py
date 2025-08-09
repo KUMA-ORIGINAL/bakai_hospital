@@ -13,7 +13,6 @@ from ..utils import send_to_openai
 class PassportOCRView(APIView):
     serializer_class = PassportImagesSerializer
 
-
     @staticmethod
     def encode_image_to_base64(image, quality=50, max_size=(800, 800)):
         img = Image.open(image)
@@ -38,6 +37,17 @@ class PassportOCRView(APIView):
             back_image_base64 = self.encode_image_to_base64(back_image)
 
             response_data = send_to_openai(front_image_base64, back_image_base64)
+
+            if isinstance(response_data, dict) and "error" in response_data:
+                return Response({"detail": response_data["error"]}, status=status.HTTP_400_BAD_REQUEST)
+
+            required_keys = ["inn", "first_name", "last_name", "patronymic", "gender", "date_of_birth", "passport_number"]
+            missing = [k for k in required_keys if not response_data.get(k)]
+            if missing:
+                return Response(
+                    {"detail": f"Загружены не паспортные изображения"},
+                    status=status.HTTP_400_BAD_REQUEST
+                )
 
             return Response(response_data, status=status.HTTP_200_OK)
 
